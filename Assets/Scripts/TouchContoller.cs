@@ -15,6 +15,15 @@ public class TouchContoller : MonoBehaviour
 
     private Touch touch;
 
+    public GameObject gridContainer;
+
+    private GridController gridController;
+
+    void Start()
+    {
+        gridController = gridContainer.GetComponent<GridController>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -59,6 +68,17 @@ public class TouchContoller : MonoBehaviour
         // Do not consider changes along the z-axis.
         touchPos.z = 0;
 
+        if (gridController.GetGridValue(touchPos.x, touchPos.y) != 0)
+        {
+            // Return prematurely.
+            return;
+        }
+
+        Vector2 exactCoords = gridController.UnitToExact(touchPos.x, touchPos.y);
+        touchPos.x = exactCoords.x;
+        touchPos.y = exactCoords.y;
+
+        Debug.Log(touchPos.x + ", " + touchPos.y);
         // Set the transform of this object to the position of the touch.
         transform.position = touchPos;
     }
