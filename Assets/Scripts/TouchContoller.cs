@@ -74,7 +74,7 @@ public class TouchContoller : MonoBehaviour
             return;
         }
 
-        Vector2 exactCoords = gridController.UnitToExact(touchPos.x, touchPos.y);
+        Vector2 exactCoords = gridController.UnitToExactNormalized(touchPos.x, touchPos.y);
         touchPos.x = exactCoords.x;
         touchPos.y = exactCoords.y;
 
