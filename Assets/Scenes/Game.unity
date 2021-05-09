@@ -761,5 +761,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GridContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 5267488584622526761, guid: a7b929dab13165544898980e7b22b0fb,
+        type: 3}
+      propertyPath: m_TagString
+      value: GridController
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7b929dab13165544898980e7b22b0fb, type: 3}
