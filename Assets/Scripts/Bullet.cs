@@ -34,6 +34,9 @@ public class Bullet : MonoBehaviour
         // Instead of destroying this object, reset its velocity.
         rigidBody.velocity = new Vector2(0, 0);
         hit = true;
+
+
+        Debug.Log(transform.position.x + ", " + transform.position.y);
     }
 
     public bool HasHit()

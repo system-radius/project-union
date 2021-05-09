@@ -7,9 +7,7 @@ public class DivideController : MonoBehaviour
 
     public GameObject bulletPrefab;
 
-    private const int A = 0;
-
-    private const int B = 1;
+    private GridController gridController;
 
     private const int SIDES = 2;
 
@@ -32,6 +30,10 @@ public class DivideController : MonoBehaviour
 
     void Start()
     {
+
+        GameObject gridContainer = GameObject.FindGameObjectWithTag("GridController");
+        gridController = gridContainer.GetComponent<GridController>();
+
         int divideCounter = 0;
         int fillCounter = 0;
         foreach (Transform child in transform)
@@ -81,7 +83,13 @@ public class DivideController : MonoBehaviour
             // means that both have hit a collider.
             Debug.Log("Line created!");
             lineComplete = true;
+            CreateLine();
         }
+    }
+
+    private void CreateLine()
+    {
+        gridController.CreateLine(bullets);
     }
 
     private bool HasAllHit()

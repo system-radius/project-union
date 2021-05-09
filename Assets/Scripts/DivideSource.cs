@@ -44,8 +44,15 @@ public class DivideSource : MonoBehaviour
         active = true;
         line = Instantiate(trailPrefab, transform.position, Quaternion.identity);
 
+        Mesh mesh = new Mesh();
+        MeshCollider collider = line.GetComponent<MeshCollider>();
+
         // Cache the trail's line renderer.
         lineRenderer = line.GetComponent<LineRenderer>();
         lineRenderer.SetPosition(SOURCE, transform.position);
+
+        lineRenderer.BakeMesh(mesh, true);
+        collider.sharedMesh = mesh;
+
     }
 }
