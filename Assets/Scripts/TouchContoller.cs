@@ -8,10 +8,12 @@ public class TouchContoller : MonoBehaviour
     // The amount of time to pass before the touch is considered as "hold."
     private const float HOLD_CONST = 0.75f;
 
+    private const float ROTATION_CONST = 90f;
+
     // The current amount of time waiting to pass.
     private float touchTime = 0f;
 
-    private bool horizontal = false;
+    private bool horizontal;
 
     private Touch touch;
 
@@ -19,9 +21,12 @@ public class TouchContoller : MonoBehaviour
 
     private GridController gridController;
 
+    private DivideController divideController;
+
     void Start()
     {
         gridController = gridContainer.GetComponent<GridController>();
+        divideController = GetComponent<DivideController>();
     }
 
     // Update is called once per frame
@@ -37,7 +42,7 @@ public class TouchContoller : MonoBehaviour
 
             if (CheckHold())
             {
-                Divide();
+                divideController.Divide(touch);
             }
             else if (touch.tapCount == 2)
             {
@@ -80,7 +85,7 @@ public class TouchContoller : MonoBehaviour
 
         Vector2 gridCoords = gridController.UnitToGridPoint(touchPos.x, touchPos.y);
 
-        Debug.Log("(" + touchPos.x + ", " + touchPos.y + ") = [" + gridCoords.x + ", " + gridCoords.y + "]");
+        //Debug.Log("(" + touchPos.x + ", " + touchPos.y + ") = [" + gridCoords.x + ", " + gridCoords.y + "]");
         // Set the transform of this object to the position of the touch.
         transform.position = touchPos;
     }
@@ -90,34 +95,13 @@ public class TouchContoller : MonoBehaviour
         return touchTime >= HOLD_CONST;
     }
 
-    /*
-    bool CheckDoubleTap(Touch touch)
-    {
-
-        bool result = false;
-
-        if (touch.phase == TouchPhase.Began)
-        {
-            float deltaTime = touch.deltaTime;
-            float deltaPos = touch.deltaPosition.magnitude;
-
-            Debug.Log("DeltaTime = " + deltaTime + ", delta pos: " + deltaPos);
-
-            result = deltaTime > 0 && deltaTime < doubleTapConst && deltaPos < tapVarianceConst;
-        }
-
-        return result;
-    }/**/
-
-    void Divide()
-    {
-        Vector3 touchPos = transform.position;
-        Debug.Log("Hold on: " + touchPos.x + ", " + touchPos.y);
-    }
-
     void Rotate()
     {
         horizontal = !horizontal;
-        transform.Rotate(0, 0, 90);
+
+        float rotation = horizontal ? ROTATION_CONST : -ROTATION_CONST;
+        transform.Rotate(0, 0, rotation);
+
+        //Debug.Log("Rotation: " + transform.rotation.z);
     }
 }
