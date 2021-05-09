@@ -78,7 +78,9 @@ public class TouchContoller : MonoBehaviour
         touchPos.x = exactCoords.x;
         touchPos.y = exactCoords.y;
 
-        Debug.Log(touchPos.x + ", " + touchPos.y);
+        Vector2 gridCoords = gridController.UnitToGridPoint(touchPos.x, touchPos.y);
+
+        Debug.Log("(" + touchPos.x + ", " + touchPos.y + ") = [" + gridCoords.x + ", " + gridCoords.y + "]");
         // Set the transform of this object to the position of the touch.
         transform.position = touchPos;
     }
