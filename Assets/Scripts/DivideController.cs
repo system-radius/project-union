@@ -11,14 +11,18 @@ public class DivideController : MonoBehaviour
 
     private const int B = 1;
 
+    private const int SIDES = 2;
+
     // There are only two divide sources.
-    private GameObject[] divideSource = new GameObject[2];
+    private GameObject[] divideSource = new GameObject[SIDES];
 
-    private GameObject[] fillDetect = new GameObject[2];
+    private GameObject[] fillDetect = new GameObject[SIDES];
 
-    private GameObject[] lasers = new GameObject[2];
+    private GameObject[] bullets = new GameObject[SIDES];
 
-    private GameObject[] bullets = new GameObject[2];
+    private DivideSource[] sources = new DivideSource[SIDES];
+
+    private Bullet[] bulletScript = new Bullet[SIDES];
 
     private Touch touch;
 
@@ -35,6 +39,7 @@ public class DivideController : MonoBehaviour
             if (child.tag == "Divide Source" && divideCounter < divideSource.Length)
             {
                 divideSource[divideCounter] = child.gameObject;
+                sources[divideCounter] = child.gameObject.GetComponent<DivideSource>();
                 divideCounter++;
             }
             else if (child.tag == "Fill Detection" && fillCounter < fillDetect.Length)
@@ -70,13 +75,31 @@ public class DivideController : MonoBehaviour
         }
 
         // Do everything that needs to be done while dividing here.
-        if (bullets[A] == null && bullets[B] == null && !lineComplete)
+        if (HasAllHit() && !lineComplete)
         {
             // While the division is in effect, both bullets becoming null
             // means that both have hit a collider.
             Debug.Log("Line created!");
             lineComplete = true;
         }
+    }
+
+    private bool HasAllHit()
+    {
+        bool result = true;
+
+        for (int i = 0; i < SIDES; i++)
+        {
+            if (bulletScript[i] == null)
+            {
+                // Return false right away if a script is not available.
+                return false;
+            }
+
+            result = result && bulletScript[i].HasHit();
+        }
+
+        return result;
     }
 
     /**
@@ -86,8 +109,13 @@ public class DivideController : MonoBehaviour
     {
         lineComplete = false;
         dividing = false;
-        Destroy(bullets[A]);
-        Destroy(bullets[B]);
+
+        for (int i = 0; i < SIDES; i++)
+        {
+            Destroy(bullets[i]);
+
+            sources[i].Deactivate();
+        }
     }
 
     /**
@@ -104,15 +132,19 @@ public class DivideController : MonoBehaviour
 
         dividing = true;
 
-        GameObject sourceA = divideSource[A];
-        GameObject sourceB = divideSource[B];
+        for (int i = 0; i < SIDES; i++)
+        {
+            // Get the source.
+            GameObject divideSrc = divideSource[i];
 
-        bullets[A] = Instantiate(bulletPrefab, sourceA.transform.position, sourceA.transform.rotation);
-        bullets[B] = Instantiate(bulletPrefab, sourceB.transform.position, sourceB.transform.rotation);
-    }
+            // Generate a bullet.
+            bullets[i] = Instantiate(bulletPrefab, divideSrc.transform.position, divideSrc.transform.rotation);
 
-    void CreateLine()
-    {
+            // Cache the bullet's script.
+            bulletScript[i] = bullets[i].GetComponent<Bullet>();
 
+            // Activate the script for the divide source.
+            sources[i].Activate();
+        }
     }
 }

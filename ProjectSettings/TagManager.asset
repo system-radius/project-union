@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Divide Source
   - Fill Detection
+  - Bullet
   layers:
   - Default
   - TransparentFX
