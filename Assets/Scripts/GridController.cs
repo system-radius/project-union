@@ -137,6 +137,22 @@ public class GridController : MonoBehaviour
             field[x, (int)pointA.y] = 1;
         }
 
+        int down = CountSpaces(pointA, new Vector2(SIZE_X, 0), 1, -1);
+        int up = CountSpaces(pointA, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+
+        Debug.Log(down + " > " + up);
+
+        if (down > up)
+        {
+            FillSpaces(pointA, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+            Debug.Log("Up!");
+        }
+        else
+        {
+            FillSpaces(pointA, new Vector2(SIZE_X, 0), 1, -1);
+            Debug.Log("Down!");
+        }
+
         PrintField();
     }
 
@@ -145,6 +161,22 @@ public class GridController : MonoBehaviour
         for (int y = (int)pointB.y; y <= (int)pointA.y; y++)
         {
             field[(int)pointA.x, y] = 1;
+        }
+
+        int left = CountSpaces(pointB, new Vector2(0, SIZE_Y), -1, 1);
+        int right = CountSpaces(pointB, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+
+        Debug.Log(left + " > " + right);
+
+        if (left > right)
+        {
+            FillSpaces(pointB, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+            Debug.Log("Right!");
+        }
+        else
+        {
+            FillSpaces(pointB, new Vector2(0, SIZE_Y), -1, 1);
+            Debug.Log("Left!");
         }
 
         PrintField();
@@ -163,5 +195,45 @@ public class GridController : MonoBehaviour
         }
 
         Debug.Log(s);
+    }
+
+    private int CountSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
+    {
+        int total = 0;
+
+        int xA = (int)pointA.x;
+        int yA = (int)pointA.y;
+
+        int xB = (int)pointB.x;
+        int yB = (int)pointB.y;
+
+        for (int x = xA; x != xB + xUpdate; x += xUpdate)
+        {
+            for (int y = yA; y != yB + yUpdate; y += yUpdate)
+            {
+                // Add to the total if the field value is 0.
+                total += field[x, y] == 0 ? 1 : 0;
+            }
+        }
+
+        return total;
+    }
+
+    private void FillSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
+    {
+        int xA = (int)pointA.x;
+        int yA = (int)pointA.y;
+
+        int xB = (int)pointB.x;
+        int yB = (int)pointB.y;
+
+        for (int x = xA; x != xB + xUpdate; x += xUpdate)
+        {
+            for (int y = yA; y != yB + yUpdate; y += yUpdate)
+            {
+                // Fill the coordinate with 1 if it is 0.
+                field[x, y] = field[x, y] == 0 ? 1 : field[x, y];
+            }
+        }
     }
 }
