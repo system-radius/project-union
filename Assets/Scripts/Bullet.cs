@@ -26,8 +26,10 @@ public class Bullet : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
 
-        if (collision.tag == "Bullet")
+        if (collision.tag == "Bullet" || hit)
         {
+            // Don't do anything when colliding with another bullet.
+            // Or if this bullet has already hit something.
             return;
         }
 
@@ -35,8 +37,14 @@ public class Bullet : MonoBehaviour
         rigidBody.velocity = new Vector2(0, 0);
         hit = true;
 
+        transform.Rotate(new Vector3(180, 0, 0));
 
-        Debug.Log(transform.position.x + ", " + transform.position.y);
+        //GameObject impact = Instantiate(impactPrefab, transform);
+
+        // Rotate the impact object on the X-Axis, relative to its parent.
+        //impact.transform.Rotate(new Vector3(180, 0, 0));
+        //impact.transform.parent = null;
+        //Destroy(gameObject);
     }
 
     public bool HasHit()

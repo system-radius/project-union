@@ -6,6 +6,8 @@ public class DivideSource : MonoBehaviour
 {
     public GameObject trailPrefab;
 
+    [SerializeField] private LayerMask layerMask;
+
     private const int SOURCE = 0;
 
     private const int TARGET = 1;
@@ -24,10 +26,11 @@ public class DivideSource : MonoBehaviour
             return;
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up);
+        // Cast the ray always upwards. The direction is corrected by the objects' rotation.
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, GridController.SIZE_Y * 2, layerMask);
+
         if (hit.collider != null) {
             // Display the line renderer.
-
             lineRenderer.SetPosition(TARGET, hit.collider.transform.position);
         }
     }
@@ -44,15 +47,9 @@ public class DivideSource : MonoBehaviour
         active = true;
         line = Instantiate(trailPrefab, transform.position, Quaternion.identity);
 
-        Mesh mesh = new Mesh();
-        MeshCollider collider = line.GetComponent<MeshCollider>();
-
         // Cache the trail's line renderer.
         lineRenderer = line.GetComponent<LineRenderer>();
         lineRenderer.SetPosition(SOURCE, transform.position);
-
-        lineRenderer.BakeMesh(mesh, true);
-        collider.sharedMesh = mesh;
 
     }
 }

@@ -75,6 +75,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
     type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1610612736
 --- !u!1 &4611149881786729033
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,6 +123,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
     type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1610612736
 --- !u!1 &6842776468417156669
 GameObject:
   m_ObjectHideFlags: 0

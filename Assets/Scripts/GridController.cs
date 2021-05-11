@@ -93,12 +93,64 @@ public class GridController : MonoBehaviour
             return -1;
         }
 
+        Debug.Log(field[(int)coords.x, (int)coords.y]);
+        PrintField();
+
         return field[(int)coords.x, (int)coords.y];
     }
 
     public void CreateLine(GameObject[] contactPoints)
     {
+        Fill(contactPoints);
 
+        LineRenderer line = new GameObject("Line").AddComponent<LineRenderer>();
+        line.material = new Material(Shader.Find("Diffuse"));
+
+        // The number of vertices.
+        line.positionCount = 2;
+
+        // Starting and ending widths.
+        line.startWidth = 1f;
+        line.endWidth = 1f;
+
+        // Starting and ending colors.
+        line.startColor = Color.black;
+        line.endColor = Color.black;
+
+        // Use the world space.
+        line.useWorldSpace = true;
+
+        CreateCollision(contactPoints[A], contactPoints[B], line);
+    }
+
+    private void CreateCollision(GameObject a, GameObject b, LineRenderer line)
+    {
+
+        Vector3 startPos = a.transform.position;
+        Vector3 endPos = b.transform.position;
+
+        BoxCollider2D col = new GameObject("Collider").AddComponent<BoxCollider2D>();
+        col.transform.parent = line.transform;
+
+        float lineLength = Vector3.Distance(startPos, endPos); // length of line
+        col.size = new Vector3(lineLength, 0.1f, 1f); // size of collider is set where X is length of line, Y is width of line, Z will be set as per requirement
+        Vector3 midPoint = (startPos + endPos) / 2;
+        col.transform.position = midPoint; // setting position of collider object
+        // Following lines calculate the angle between startPos and endPos
+        float angle = (Mathf.Abs(startPos.y - endPos.y) / Mathf.Abs(startPos.x - endPos.x));
+        if ((startPos.y < endPos.y && startPos.x > endPos.x) || (endPos.y < startPos.y && endPos.x > startPos.x))
+        {
+            angle *= -1;
+        }
+
+        angle = Mathf.Rad2Deg * Mathf.Atan(angle);
+        col.transform.Rotate(0, 0, angle);
+
+        col.gameObject.layer = 30;
+    }
+
+    private void Fill(GameObject[] contactPoints)
+    {
         int length = contactPoints.Length;
 
         Vector2[] gridCoords = new Vector2[length];
@@ -109,11 +161,9 @@ public class GridController : MonoBehaviour
             gridCoords[i] = UnitToGridPoint(pos.x, pos.y);
         }
 
-        Fill(gridCoords[A], gridCoords[B]);
-    }
+        Vector2 pointA = gridCoords[A];
+        Vector2 pointB = gridCoords[B];
 
-    private void Fill(Vector2 pointA, Vector2 pointB)
-    {
         // Check which axis did not change to determine how to fill (vertically or horizontally).
 
         // For now, there can only be two points of contact.

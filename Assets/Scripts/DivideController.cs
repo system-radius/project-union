@@ -84,6 +84,7 @@ public class DivideController : MonoBehaviour
             Debug.Log("Line created!");
             lineComplete = true;
             CreateLine();
+            DeactivateSources();
         }
     }
 
@@ -115,13 +116,25 @@ public class DivideController : MonoBehaviour
      */
     public void StopDivide()
     {
-        lineComplete = false;
         dividing = false;
 
         for (int i = 0; i < SIDES; i++)
         {
-            Destroy(bullets[i]);
+            if (!lineComplete)
+            {
+                Destroy(bullets[i]);
+            }
+        }
 
+        DeactivateSources();
+
+        lineComplete = false;
+    }
+
+    private void DeactivateSources()
+    {
+        for (int i = 0; i < SIDES; i++)
+        {
             sources[i].Deactivate();
         }
     }

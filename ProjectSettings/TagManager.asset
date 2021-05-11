@@ -38,8 +38,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Bullet
+  - LinePoint
   - Divider
   m_SortingLayers:
   - name: Background
