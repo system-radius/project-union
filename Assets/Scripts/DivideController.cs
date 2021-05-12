@@ -85,6 +85,7 @@ public class DivideController : MonoBehaviour
             lineComplete = true;
             CreateLine();
             DeactivateSources();
+            touch.phase = TouchPhase.Ended;
         }
     }
 
@@ -165,7 +166,7 @@ public class DivideController : MonoBehaviour
             bulletScript[i] = bullets[i].GetComponent<Bullet>();
 
             // Activate the script for the divide source.
-            sources[i].Activate();
+            sources[i].Activate(bullets[i]);
         }
     }
 }

@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 611622808}
   m_Layer: 0
   m_Name: TopRight
-  m_TagString: Untagged
+  m_TagString: ColliderLimit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 1119650043}
   m_Layer: 0
   m_Name: BotRight
-  m_TagString: Untagged
+  m_TagString: ColliderLimit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 1230681288}
   m_Layer: 0
   m_Name: TopLeft
-  m_TagString: Untagged
+  m_TagString: ColliderLimit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -540,7 +540,7 @@ GameObject:
   - component: {fileID: 1291386157}
   m_Layer: 0
   m_Name: BotLeft
-  m_TagString: Untagged
+  m_TagString: ColliderLimit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -609,6 +609,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1401430916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1401430917}
+  m_Layer: 0
+  m_Name: LineContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1401430917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401430916}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.5701966, y: -17.155537, z: -11.736328}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1608147695
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,6 +731,19 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 751639085, guid: a7b929dab13165544898980e7b22b0fb, type: 3}
+      propertyPath: m_TagString
+      value: ColliderLimit
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993149396, guid: a7b929dab13165544898980e7b22b0fb, type: 3}
+      propertyPath: m_TagString
+      value: ColliderLimit
+      objectReference: {fileID: 0}
+    - target: {fileID: 1335483986962246562, guid: a7b929dab13165544898980e7b22b0fb,
+        type: 3}
+      propertyPath: m_TagString
+      value: ColliderLimit
+      objectReference: {fileID: 0}
     - target: {fileID: 5267488584622526759, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -765,6 +808,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: GridController
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027216308122023667, guid: a7b929dab13165544898980e7b22b0fb,
+        type: 3}
+      propertyPath: m_TagString
+      value: ColliderLimit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7b929dab13165544898980e7b22b0fb, type: 3}

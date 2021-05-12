@@ -16,20 +16,32 @@ public class GridController : MonoBehaviour
 
     private const int B = 1;
 
+    private Transform lineContainer;
+
     // The Divider prefab to be created.
     public GameObject divider;
+
+    public static float ComputeAngle(Vector3 startPos, Vector3 endPos)
+    {
+        Debug.Log(startPos + ", " + endPos);
+
+        // Following lines calculate the angle between startPos and endPos
+        float angle = (Mathf.Abs(startPos.y - endPos.y) / Mathf.Abs(startPos.x - endPos.x));
+        if ((startPos.y < endPos.y && startPos.x > endPos.x) || (endPos.y < startPos.y && endPos.x > startPos.x))
+        {
+            angle *= -1;
+        }
+
+        return Mathf.Rad2Deg * Mathf.Atan(angle);
+    }
 
     // Called when the scene starts.
     void Awake()
     {
+        lineContainer = GameObject.FindGameObjectWithTag("LineContainer").transform;
+
         SpawnDivider();
         InitializeField();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void SpawnDivider()
@@ -93,9 +105,6 @@ public class GridController : MonoBehaviour
             return -1;
         }
 
-        Debug.Log(field[(int)coords.x, (int)coords.y]);
-        PrintField();
-
         return field[(int)coords.x, (int)coords.y];
     }
 
@@ -120,6 +129,12 @@ public class GridController : MonoBehaviour
         // Use the world space.
         line.useWorldSpace = true;
 
+        line.gameObject.transform.SetParent(lineContainer.transform);
+        for (int i = 0; i < contactPoints.Length; i++)
+        {
+            contactPoints[i].transform.SetParent(lineContainer.transform);
+        }
+
         CreateCollision(contactPoints[A], contactPoints[B], line);
     }
 
@@ -136,17 +151,11 @@ public class GridController : MonoBehaviour
         col.size = new Vector3(lineLength, 0.1f, 1f); // size of collider is set where X is length of line, Y is width of line, Z will be set as per requirement
         Vector3 midPoint = (startPos + endPos) / 2;
         col.transform.position = midPoint; // setting position of collider object
-        // Following lines calculate the angle between startPos and endPos
-        float angle = (Mathf.Abs(startPos.y - endPos.y) / Mathf.Abs(startPos.x - endPos.x));
-        if ((startPos.y < endPos.y && startPos.x > endPos.x) || (endPos.y < startPos.y && endPos.x > startPos.x))
-        {
-            angle *= -1;
-        }
-
-        angle = Mathf.Rad2Deg * Mathf.Atan(angle);
-        col.transform.Rotate(0, 0, angle);
+        
+        col.transform.Rotate(0, 0, ComputeAngle(startPos, endPos));
 
         col.gameObject.layer = 30;
+        col.gameObject.tag = "ColliderLimit";
     }
 
     private void Fill(GameObject[] contactPoints)

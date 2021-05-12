@@ -25,11 +25,22 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-
-        if (collision.tag == "Bullet" || hit)
+        if (collision.tag == "ColliderLimit")
         {
-            // Don't do anything when colliding with another bullet.
-            // Or if this bullet has already hit something.
+            // Process the hit for ColliderLimit tag.
+            ProcessColliderLimit();
+        }
+    }
+
+    /**
+     * This processes the hit if the bullet has collided with the bordering limits,
+     * as well as the generated lines.
+     */
+    private void ProcessColliderLimit()
+    {
+
+        if (hit)
+        {
             return;
         }
 
@@ -38,13 +49,6 @@ public class Bullet : MonoBehaviour
         hit = true;
 
         transform.Rotate(new Vector3(180, 0, 0));
-
-        //GameObject impact = Instantiate(impactPrefab, transform);
-
-        // Rotate the impact object on the X-Axis, relative to its parent.
-        //impact.transform.Rotate(new Vector3(180, 0, 0));
-        //impact.transform.parent = null;
-        //Destroy(gameObject);
     }
 
     public bool HasHit()

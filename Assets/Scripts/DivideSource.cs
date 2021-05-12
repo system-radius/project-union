@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,34 +16,46 @@ public class DivideSource : MonoBehaviour
 
     private LineRenderer lineRenderer;
 
+    private Transform targetTransform;
+
+    private CapsuleCollider2D collider;
+
     private bool active = false;
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!active && lineRenderer == null)
+        if (!active || line == null || targetTransform == null)
         {
             return;
         }
 
-        // Cast the ray always upwards. The direction is corrected by the objects' rotation.
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, GridController.SIZE_Y * 2, layerMask);
-
-        if (hit.collider != null) {
-            // Display the line renderer.
-            lineRenderer.SetPosition(TARGET, hit.collider.transform.position);
-        }
+        lineRenderer.SetPosition(TARGET, targetTransform.position);
+        
+        collider.size = new Vector2(0.5f, (targetTransform.position - transform.position).magnitude);
+        collider.transform.position = transform.position + (targetTransform.position - transform.position) / 2;
+        
     }
 
     public void Deactivate()
     {
+        if (!active)
+        {
+            return;
+        }
+
         active = false;
+        collider = null;
         lineRenderer = null;
         Destroy(line);
     }
 
-    public void Activate()
+    public void Activate(GameObject bullet)
     {
+        if (active) {
+            return;
+        }
+
         active = true;
         line = Instantiate(trailPrefab, transform.position, Quaternion.identity);
 
@@ -51,5 +63,12 @@ public class DivideSource : MonoBehaviour
         lineRenderer = line.GetComponent<LineRenderer>();
         lineRenderer.SetPosition(SOURCE, transform.position);
 
+        // Create a capsule collider attached to the line renderer.
+        collider = line.GetComponent<CapsuleCollider2D>();
+
+        targetTransform = bullet.transform;
+        lineRenderer.SetPosition(TARGET, targetTransform.position);
+
+        collider.transform.rotation = transform.rotation;
     }
 }

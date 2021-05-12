@@ -8,6 +8,7 @@ TagManager:
   - Fill Detection
   - Bullet
   - GridController
+  - ColliderLimit
   layers:
   - Default
   - TransparentFX
