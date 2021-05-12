@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - GridController
   - ColliderLimit
+  - LineContainer
   layers:
   - Default
   - TransparentFX
