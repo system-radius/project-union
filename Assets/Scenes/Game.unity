@@ -1119,6 +1119,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7809809998484198288, guid: cb62b6034dc24f445af26560d51d4836,
         type: 3}
+    - target: {fileID: 5267488584622526758, guid: a7b929dab13165544898980e7b22b0fb,
+        type: 3}
+      propertyPath: dividerPrefab
+      value: 
+      objectReference: {fileID: 7958453587348471938, guid: c97f05a5f312a344099e7ce708e51b7b,
+        type: 3}
     - target: {fileID: 5267488584622526759, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
       propertyPath: m_LocalPosition.x
