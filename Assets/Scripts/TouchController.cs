@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TouchContoller : MonoBehaviour
+public class TouchController : MonoBehaviour
 {
 
     // The amount of time to pass before the touch is considered as "hold."
-    private const float HOLD_CONST = 0.75f;
+    private const float HOLD_CONST = 0.5f;
 
     private const float ROTATION_CONST = 90f;
 
@@ -38,6 +38,8 @@ public class TouchContoller : MonoBehaviour
             // Just take the first touch instance.
             touch = Input.GetTouch(0);
             touchTime += touch.deltaTime;
+
+            Debug.Log(touchTime);
 
             if (CheckHold())
             {
@@ -94,7 +96,7 @@ public class TouchContoller : MonoBehaviour
     {
 
         return touchTime >= HOLD_CONST &&
-            (gridController.GetGridValue(transform.position.x, transform.position.y) == 0 || touch.phase != TouchPhase.Ended);
+            (gridController.GetGridValue(transform.position.x, transform.position.y) == 0);
     }
 
     void Rotate()
