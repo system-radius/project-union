@@ -54,6 +54,9 @@ public class GameController : MonoBehaviour
 
         // Get the continue prompt instance.
         continueTap = GameObject.FindGameObjectWithTag("Finish");
+
+        // Call to reset every thing as first step.
+        Reset();
     }
 
     /**
@@ -100,6 +103,9 @@ public class GameController : MonoBehaviour
 
     public void Reset()
     {
+        transitionStart = false;
+        levelCompleteTimer = 0;
+
         gridController.Reset();
         SpawnDivider();
 
@@ -111,7 +117,6 @@ public class GameController : MonoBehaviour
         }
         levelImage = Instantiate(levelPrefabs[currentLevel]);
 
-        SpawnDivider();
         continueTap.SetActive(false);
     }
 

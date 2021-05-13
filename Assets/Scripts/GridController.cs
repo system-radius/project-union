@@ -43,6 +43,11 @@ public class GridController : MonoBehaviour
     public void Reset()
     {
 
+        if (lineContainer == null || maskContainer == null)
+        {
+            return;
+        }
+
         InitializeField();
         fillableSpaces = CountSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
         ComputeFillPercent();
@@ -52,6 +57,11 @@ public class GridController : MonoBehaviour
 
     public void ClearLines()
     {
+        if (lineContainer == null)
+        {
+            return;
+        }
+
         foreach (Transform child in lineContainer.transform)
         {
             // Remove all of the children in the container.
