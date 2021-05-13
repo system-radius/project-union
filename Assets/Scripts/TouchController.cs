@@ -29,7 +29,7 @@ public class TouchController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
         // If a touch is registered...
