@@ -29,7 +29,6 @@ public class GridController : MonoBehaviour
 
     public static float ComputeAngle(Vector3 startPos, Vector3 endPos)
     {
-        Debug.Log(startPos + ", " + endPos);
 
         // Following lines calculate the angle between startPos and endPos
         float angle = (Mathf.Abs(startPos.y - endPos.y) / Mathf.Abs(startPos.x - endPos.x));
@@ -220,20 +219,20 @@ public class GridController : MonoBehaviour
         int down = CountSpaces(pointA, new Vector2(SIZE_X, 0), 1, -1);
         int up = CountSpaces(pointA, new Vector2(SIZE_X, SIZE_Y), 1, 1);
 
-        Debug.Log(down + " > " + up);
+        //Debug.Log(down + " > " + up);
 
         if (down > up)
         {
             FillSpaces(pointA, new Vector2(SIZE_X, SIZE_Y), 1, 1);
-            Debug.Log("Up!");
+            //Debug.Log("Up!");
         }
         else
         {
             FillSpaces(pointA, new Vector2(SIZE_X, 0), 1, -1);
-            Debug.Log("Down!");
+            //Debug.Log("Down!");
         }
 
-        PrintField();
+        //PrintField();
     }
 
     private void FillVertical(Vector2 pointA, Vector2 pointB)
@@ -246,20 +245,20 @@ public class GridController : MonoBehaviour
         int left = CountSpaces(pointB, new Vector2(0, SIZE_Y), -1, 1);
         int right = CountSpaces(pointB, new Vector2(SIZE_X, SIZE_Y), 1, 1);
 
-        Debug.Log(left + " > " + right);
+        //Debug.Log(left + " > " + right);
 
         if (left > right)
         {
             FillSpaces(pointB, new Vector2(SIZE_X, SIZE_Y), 1, 1);
-            Debug.Log("Right!");
+            //Debug.Log("Right!");
         }
         else
         {
             FillSpaces(pointB, new Vector2(0, SIZE_Y), -1, 1);
-            Debug.Log("Left!");
+            //Debug.Log("Left!");
         }
 
-        PrintField();
+        //PrintField();
     }
 
     private void PrintField()
