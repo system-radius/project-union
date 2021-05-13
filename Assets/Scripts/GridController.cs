@@ -10,6 +10,8 @@ public class GridController : MonoBehaviour
 
     public const int SIZE_Y = 48 * MULTIPLIER;
 
+    public const float FILL_QUOTA = 0.85f;
+
     private int[,] field = new int[SIZE_X + 1, SIZE_Y + 1];
 
     private const int A = 0;
@@ -21,11 +23,23 @@ public class GridController : MonoBehaviour
     private Transform maskContainer;
 
     // The Divider prefab to be created.
-    public GameObject divider;
+    public GameObject dividerPrefab;
 
     public GameObject maskPrefab;
 
+    public GameObject[] levels;
+
     private GameObject[,] masks = new GameObject[SIZE_X + 1, SIZE_Y + 1];
+
+    private float fillPercent = 0;
+
+    private int fillableSpaces = 0;
+
+    private int level = -1;
+
+    private GameObject levelImage;
+
+    private GameObject divider;
 
     public static float ComputeAngle(Vector3 startPos, Vector3 endPos)
     {
@@ -46,13 +60,46 @@ public class GridController : MonoBehaviour
         lineContainer = GameObject.FindGameObjectWithTag("LineContainer").transform;
         maskContainer = GameObject.FindGameObjectWithTag("MaskContainer").transform;
 
-        SpawnDivider();
+        Reset();
+    }
+
+    void FixedUpdate()
+    {
+        if (fillPercent >= FILL_QUOTA)
+        {
+            Reset();
+        }
+    }
+
+    public void Reset()
+    {
         InitializeField();
+        fillableSpaces = CountSpaces(new Vector2(0, 0), new Vector2(SIZE_X, SIZE_Y), 1, 1);
+        ComputeFillPercent();
+
+        level = level + 1 == levels.Length ? 0 : level + 1;
+
+        if (levelImage != null) {
+            Destroy(levelImage);
+        }
+        levelImage = Instantiate(levels[level]);
+
+        foreach (Transform child in lineContainer.transform)
+        {
+            // Remove all of the children in the container.
+            Destroy(child.gameObject);
+        }
+
+        SpawnDivider();
     }
 
     public void SpawnDivider()
     {
-        Instantiate(divider);
+        if (divider != null) {
+            Destroy(divider);
+        }
+
+        divider = Instantiate(dividerPrefab);
     }
 
     void InitializeField()
@@ -64,9 +111,14 @@ public class GridController : MonoBehaviour
                 field[x, y] = 0;
                 Vector2 coord = GridToUnitPoint(x, y);
 
-                GameObject mask = Instantiate(maskPrefab, maskContainer);
-                mask.transform.position = new Vector3(coord.x, coord.y);
-                masks[x, y] = mask;
+                if (masks[x, y] == null)
+                {
+                    GameObject mask = Instantiate(maskPrefab, maskContainer);
+                    mask.transform.position = new Vector3(coord.x, coord.y);
+                    masks[x, y] = mask;
+                }
+
+                masks[x, y].GetComponent<SpriteMask>().enabled = false;
             }
         }
     }
@@ -276,6 +328,14 @@ public class GridController : MonoBehaviour
         Debug.Log(s);
     }
 
+    private void ComputeFillPercent()
+    {
+        int currentSpaces = CountSpaces(new Vector2(0, 0), new Vector2(SIZE_X, SIZE_Y), 1, 1);
+        fillPercent = (float)(fillableSpaces - currentSpaces) / (float)fillableSpaces;
+
+        Debug.Log("fill: " + fillPercent * 100f);
+    }
+
     private int CountSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
     {
         int total = 0;
@@ -316,5 +376,7 @@ public class GridController : MonoBehaviour
                 masks[x, y].GetComponent<SpriteMask>().enabled = field[x, y] == 1;
             }
         }
+
+        ComputeFillPercent();
     }
 }

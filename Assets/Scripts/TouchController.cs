@@ -39,8 +39,6 @@ public class TouchController : MonoBehaviour
             touch = Input.GetTouch(0);
             touchTime += touch.deltaTime;
 
-            Debug.Log(touchTime);
-
             if (CheckHold())
             {
                 //Debug.Log("(" + transform.position.x + ", " + transform.position.y + ") = " + gridController.GetGridValue(transform.position.x, transform.position.y));
