@@ -76,17 +76,17 @@ public class TouchController : MonoBehaviour
         // Do not consider changes along the z-axis.
         touchPos.z = 0;
 
-        if (gridController.GetGridValue(touchPos.x, touchPos.y) != 0)
+        if (DividerUtils.GetGridValue(gridController.GetField(), touchPos.x, touchPos.y) != 0)
         {
             // Return prematurely.
             return;
         }
 
-        Vector2 exactCoords = gridController.UnitToExactNormalized(touchPos.x, touchPos.y);
+        Vector2 exactCoords = DividerUtils.UnitToExactNormalized(touchPos.x, touchPos.y);
         touchPos.x = exactCoords.x;
         touchPos.y = exactCoords.y;
 
-        Vector2 gridCoords = gridController.UnitToGridPoint(touchPos.x, touchPos.y);
+        Vector2 gridCoords = DividerUtils.UnitToGridPoint(touchPos.x, touchPos.y);
 
         //Debug.Log("(" + touchPos.x + ", " + touchPos.y + ") = [" + gridCoords.x + ", " + gridCoords.y + "]");
         // Set the transform of this object to the position of the touch.
@@ -96,8 +96,9 @@ public class TouchController : MonoBehaviour
     bool CheckHold()
     {
 
-        return touchTime >= HOLD_CONST &&
-            (gridController.GetGridValue(transform.position.x, transform.position.y) == 0);
+        return touchTime >= HOLD_CONST && DividerUtils.GetGridValue(
+            gridController.GetField(), transform.position.x, transform.position.y
+            ) == 0;
     }
 
     void Rotate()

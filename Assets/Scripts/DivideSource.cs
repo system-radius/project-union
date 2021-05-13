@@ -18,7 +18,7 @@ public class DivideSource : MonoBehaviour
 
     private Transform targetTransform;
 
-    private CapsuleCollider2D collider;
+    private CapsuleCollider2D capsuleCollider;
 
     private bool active = false;
 
@@ -31,9 +31,9 @@ public class DivideSource : MonoBehaviour
         }
 
         lineRenderer.SetPosition(TARGET, targetTransform.position);
-        
-        collider.size = new Vector2(0.5f, (targetTransform.position - transform.position).magnitude);
-        collider.transform.position = transform.position + (targetTransform.position - transform.position) / 2;
+
+        capsuleCollider.size = new Vector2(0.5f, (targetTransform.position - transform.position).magnitude);
+        capsuleCollider.transform.position = transform.position + (targetTransform.position - transform.position) / 2;
         
     }
 
@@ -45,7 +45,7 @@ public class DivideSource : MonoBehaviour
         }
 
         active = false;
-        collider = null;
+        capsuleCollider = null;
         lineRenderer = null;
         Destroy(line);
     }
@@ -64,11 +64,11 @@ public class DivideSource : MonoBehaviour
         lineRenderer.SetPosition(SOURCE, transform.position);
 
         // Create a capsule collider attached to the line renderer.
-        collider = line.GetComponent<CapsuleCollider2D>();
+        capsuleCollider = line.GetComponent<CapsuleCollider2D>();
 
         targetTransform = bullet.transform;
         lineRenderer.SetPosition(TARGET, targetTransform.position);
 
-        collider.transform.rotation = transform.rotation;
+        capsuleCollider.transform.rotation = transform.rotation;
     }
 }

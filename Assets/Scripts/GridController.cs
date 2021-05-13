@@ -4,17 +4,8 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    public const int MULTIPLIER = 1;
-    
-    public const int SIZE_X = 24 * MULTIPLIER;
 
-    public const int SIZE_Y = 48 * MULTIPLIER;
-
-    public const float TRANSITION_TIME = 2f;
-
-    public const float FILL_QUOTA = 0.85f;
-
-    private int[,] field = new int[SIZE_X + 1, SIZE_Y + 1];
+    private int[,] field = new int[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
 
     private const int A = 0;
 
@@ -24,127 +15,42 @@ public class GridController : MonoBehaviour
 
     private Transform maskContainer;
 
-    // The Divider prefab to be created.
-    public GameObject dividerPrefab;
-
     public GameObject maskPrefab;
 
-    public GameObject[] levels;
-
-    private GameObject[,] masks = new GameObject[SIZE_X + 1, SIZE_Y + 1];
+    private GameObject[,] masks = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
 
     private float fillPercent = 0;
 
     private int fillableSpaces = 0;
 
-    private int level = -1;
-
-    private GameObject continueTap;
-
-    private GameObject levelImage;
-
-    private GameObject divider;
-
-    private float transitionTimer = 0;
-
-    private bool transitionStart = false;
-
-    public static float ComputeAngle(Vector3 startPos, Vector3 endPos)
-    {
-
-        // Following lines calculate the angle between startPos and endPos
-        float angle = (Mathf.Abs(startPos.y - endPos.y) / Mathf.Abs(startPos.x - endPos.x));
-        if ((startPos.y < endPos.y && startPos.x > endPos.x) || (endPos.y < startPos.y && endPos.x > startPos.x))
-        {
-            angle *= -1;
-        }
-
-        return Mathf.Rad2Deg * Mathf.Atan(angle);
-    }
-
     // Called when the scene starts.
     void Awake()
     {
+        // Retrieve the container for the generated lines and bullets.
         lineContainer = GameObject.FindGameObjectWithTag("LineContainer").transform;
-        maskContainer = GameObject.FindGameObjectWithTag("MaskContainer").transform;
 
-        continueTap = GameObject.FindGameObjectWithTag("Finish");
+        // Retrieve the container for the masks.
+        maskContainer = GameObject.FindGameObjectWithTag("MaskContainer").transform;
 
         Reset();
     }
 
-    void FixedUpdate()
+    public float GetFillPercent()
     {
-        if (fillPercent >= FILL_QUOTA && !transitionStart)
-        {
-            // Will only display the full image if the divider is still available.
-            DisplayFullImage();
-        }
-
-        if (transitionStart && !continueTap.activeSelf)
-        {
-            transitionTimer += Time.deltaTime;
-
-            if (transitionTimer >= TRANSITION_TIME)
-            {
-                continueTap.SetActive(true);
-            }
-        }
-
-        if (continueTap.activeSelf)
-        {
-            if (Input.touchCount > 0)
-            {
-                if (Input.GetTouch(0).phase == TouchPhase.Ended)
-                {
-                    Reset();
-                }
-            }
-        }
-    }
-
-    private void DisplayFullImage()
-    {
-
-        if (transitionStart)
-        {
-            return;
-        }
-
-        // Fill the remaining spaces.
-        FillSpaces(new Vector2(0, 0), new Vector2(SIZE_X, SIZE_Y), 1, 1);
-
-        // Remove the divider.
-        Destroy(divider);
-
-        // Remove the lines created.
-        ClearLines();
-
-        transitionStart = true;
+        return fillPercent;
     }
 
     public void Reset()
     {
-        transitionTimer = 0;
-        transitionStart = false;
 
         InitializeField();
-        fillableSpaces = CountSpaces(new Vector2(0, 0), new Vector2(SIZE_X, SIZE_Y), 1, 1);
+        fillableSpaces = CountSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
         ComputeFillPercent();
 
-        level = level + 1 == levels.Length ? 0 : level + 1;
-
-        if (levelImage != null) {
-            Destroy(levelImage);
-        }
-        levelImage = Instantiate(levels[level]);
-
         ClearLines();
-        SpawnDivider();
-        continueTap.SetActive(false);
     }
 
-    private void ClearLines()
+    public void ClearLines()
     {
         foreach (Transform child in lineContainer.transform)
         {
@@ -153,23 +59,14 @@ public class GridController : MonoBehaviour
         }
     }
 
-    public void SpawnDivider()
-    {
-        if (divider != null) {
-            Destroy(divider);
-        }
-
-        divider = Instantiate(dividerPrefab);
-    }
-
     void InitializeField()
     {
-        for (int x = 0; x <= SIZE_X; x++)
+        for (int x = 0; x <= DividerUtils.SIZE_X; x++)
         {
-            for (int y = 0; y <= SIZE_Y; y++)
+            for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
             {
                 field[x, y] = 0;
-                Vector2 coord = GridToUnitPoint(x, y);
+                Vector2 coord = DividerUtils.GridToUnitPoint(x, y);
 
                 if (masks[x, y] == null)
                 {
@@ -183,61 +80,9 @@ public class GridController : MonoBehaviour
         }
     }
 
-    int[,] GetField()
+    public int[,] GetField()
     {
         return field;
-    }
-
-    public Vector2 UnitToExactNormalized(float x, float y)
-    {
-        Vector2 exactCoords = UnitToExact(x, y);
-
-        return new Vector2(exactCoords.x / MULTIPLIER, exactCoords.y / MULTIPLIER);
-    }
-
-    public Vector2 UnitToExact(float x, float y)
-    {
-        float xAdder = x < 0 ? -0.5f : 0.5f;
-        float yAdder = y < 0 ? -0.5f : 0.5f;
-
-        // Convert x and y to their nearest whole number.
-        int cX = (int)((x * MULTIPLIER) + xAdder);
-        int cY = (int)((y * MULTIPLIER) + yAdder);
-
-        return new Vector2(cX, cY);
-    }
-
-    public Vector2 UnitToGridPoint(float x, float y)
-    {
-        // Convert x and y to their nearest whole number.
-        Vector2 exactCoords = UnitToExact(x, y);
-
-        // Adjust the coordinates to fit the field array.
-        int cX = (int)(exactCoords.x + (SIZE_X / 2));
-        int cY = (int)(exactCoords.y + (SIZE_Y / 2));
-        
-        return new Vector2(cX, cY);
-    }
-
-    public Vector2 GridToUnitPoint(int x, int y)
-    {
-
-        float cX = x - (SIZE_X / 2);
-        float cY = y - (SIZE_Y / 2);
-
-        return UnitToExactNormalized(cX, cY);
-    }
-
-    public int GetGridValue(float x, float y)
-    {
-        Vector2 coords = UnitToGridPoint(x, y);
-
-        if (coords.x <= 0 || coords.x >= SIZE_X || coords.y <= 0 || coords.y >= SIZE_Y)
-        {
-            return -1;
-        }
-
-        return field[(int)coords.x, (int)coords.y];
     }
 
     public void CreateLine(GameObject[] contactPoints)
@@ -284,7 +129,7 @@ public class GridController : MonoBehaviour
         Vector3 midPoint = (startPos + endPos) / 2;
         col.transform.position = midPoint; // setting position of collider object
         
-        col.transform.Rotate(0, 0, ComputeAngle(startPos, endPos));
+        col.transform.Rotate(0, 0, DividerUtils.ComputeAngle(startPos, endPos));
 
         col.gameObject.layer = 30;
         col.gameObject.tag = "ColliderLimit";
@@ -299,7 +144,7 @@ public class GridController : MonoBehaviour
         {
             // Retrieve the grid version of the contact point values.
             Vector3 pos = contactPoints[i].transform.position;
-            gridCoords[i] = UnitToGridPoint(pos.x, pos.y);
+            gridCoords[i] = DividerUtils.UnitToGridPoint(pos.x, pos.y);
         }
 
         Vector2 pointA = gridCoords[A];
@@ -328,19 +173,19 @@ public class GridController : MonoBehaviour
             field[x, (int)pointA.y] = 1;
         }
 
-        int down = CountSpaces(pointA, new Vector2(SIZE_X, 0), 1, -1);
-        int up = CountSpaces(pointA, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+        int down = CountSpaces(pointA, new Vector2(DividerUtils.SIZE_X, 0), 1, -1);
+        int up = CountSpaces(pointA, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
 
         //Debug.Log(down + " > " + up);
 
         if (down > up)
         {
-            FillSpaces(pointA, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+            FillSpaces(pointA, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
             //Debug.Log("Up!");
         }
         else
         {
-            FillSpaces(pointA, new Vector2(SIZE_X, 0), 1, -1);
+            FillSpaces(pointA, new Vector2(DividerUtils.SIZE_X, 0), 1, -1);
             //Debug.Log("Down!");
         }
 
@@ -354,49 +199,34 @@ public class GridController : MonoBehaviour
             field[(int)pointA.x, y] = 1;
         }
 
-        int left = CountSpaces(pointB, new Vector2(0, SIZE_Y), -1, 1);
-        int right = CountSpaces(pointB, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+        int left = CountSpaces(pointB, new Vector2(0, DividerUtils.SIZE_Y), -1, 1);
+        int right = CountSpaces(pointB, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
 
         //Debug.Log(left + " > " + right);
 
         if (left > right)
         {
-            FillSpaces(pointB, new Vector2(SIZE_X, SIZE_Y), 1, 1);
+            FillSpaces(pointB, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
             //Debug.Log("Right!");
         }
         else
         {
-            FillSpaces(pointB, new Vector2(0, SIZE_Y), -1, 1);
+            FillSpaces(pointB, new Vector2(0, DividerUtils.SIZE_Y), -1, 1);
             //Debug.Log("Left!");
         }
 
         //PrintField();
     }
 
-    private void PrintField()
+    public void ComputeFillPercent()
     {
-        string s = "\n";
-        for (int y = SIZE_Y; y >= 0; y--)
-        {
-            for (int x = 0; x <= SIZE_X; x++)
-            {
-                s += field[x, y] + " ";
-            }
-            s += "\n";
-        }
-
-        Debug.Log(s);
-    }
-
-    private void ComputeFillPercent()
-    {
-        int currentSpaces = CountSpaces(new Vector2(0, 0), new Vector2(SIZE_X, SIZE_Y), 1, 1);
+        int currentSpaces = CountSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
         fillPercent = (float)(fillableSpaces - currentSpaces) / (float)fillableSpaces;
 
         Debug.Log("fill: " + fillPercent * 100f);
     }
 
-    private int CountSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
+    public int CountSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
     {
         int total = 0;
 
@@ -418,7 +248,7 @@ public class GridController : MonoBehaviour
         return total;
     }
 
-    private void FillSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
+    public void FillSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
     {
         int xA = (int)pointA.x;
         int yA = (int)pointA.y;
