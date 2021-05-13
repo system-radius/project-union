@@ -46,14 +46,15 @@ public class TouchController : MonoBehaviour
             }
             else if (touch.tapCount == 2)
             {
-                if (touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Stationary)
                 {
                     Rotate();
+                    touch.phase = TouchPhase.Ended;
                 }
             }
             else
             {
-                if (touch.phase == TouchPhase.Began)
+                if (touch.phase != TouchPhase.Ended)
                 {
                     MoveToTouch();
                 }
