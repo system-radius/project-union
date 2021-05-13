@@ -10,6 +10,7 @@ TagManager:
   - GridController
   - ColliderLimit
   - LineContainer
+  - MaskContainer
   layers:
   - Default
   - TransparentFX

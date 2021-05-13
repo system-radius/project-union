@@ -18,8 +18,14 @@ public class GridController : MonoBehaviour
 
     private Transform lineContainer;
 
+    private Transform maskContainer;
+
     // The Divider prefab to be created.
     public GameObject divider;
+
+    public GameObject maskPrefab;
+
+    private GameObject[,] masks = new GameObject[SIZE_X + 1, SIZE_Y + 1];
 
     public static float ComputeAngle(Vector3 startPos, Vector3 endPos)
     {
@@ -39,6 +45,7 @@ public class GridController : MonoBehaviour
     void Awake()
     {
         lineContainer = GameObject.FindGameObjectWithTag("LineContainer").transform;
+        maskContainer = GameObject.FindGameObjectWithTag("MaskContainer").transform;
 
         SpawnDivider();
         InitializeField();
@@ -56,6 +63,11 @@ public class GridController : MonoBehaviour
             for (int y = 0; y <= SIZE_Y; y++)
             {
                 field[x, y] = 0;
+                Vector2 coord = GridToUnitPoint(x, y);
+
+                GameObject mask = Instantiate(maskPrefab, maskContainer);
+                mask.transform.position = new Vector3(coord.x, coord.y);
+                masks[x, y] = mask;
             }
         }
     }
@@ -94,6 +106,15 @@ public class GridController : MonoBehaviour
         int cY = (int)(exactCoords.y + (SIZE_Y / 2));
         
         return new Vector2(cX, cY);
+    }
+
+    public Vector2 GridToUnitPoint(int x, int y)
+    {
+
+        float cX = x - (SIZE_X / 2);
+        float cY = y - (SIZE_Y / 2);
+
+        return UnitToExactNormalized(cX, cY);
     }
 
     public int GetGridValue(float x, float y)
@@ -292,6 +313,8 @@ public class GridController : MonoBehaviour
             {
                 // Fill the coordinate with 1 if it is 0.
                 field[x, y] = field[x, y] == 0 ? 1 : field[x, y];
+
+                masks[x, y].GetComponent<SpriteMask>().enabled = field[x, y] == 1;
             }
         }
     }

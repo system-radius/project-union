@@ -121,6 +121,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &72058680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 72058681}
+  m_Layer: 0
+  m_Name: MaskContainer
+  m_TagString: MaskContainer
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &72058681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72058680}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &152736390
 GameObject:
   m_ObjectHideFlags: 0
@@ -174,8 +204,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 719441381
-  m_SortingLayer: -1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 0dd1c5d300573554bb5db12f59ba304b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -197,7 +227,7 @@ Transform:
   m_GameObject: {fileID: 152736390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 75, y: 150, z: 1}
+  m_LocalScale: {x: 78.5, y: 153.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -744,6 +774,12 @@ PrefabInstance:
       propertyPath: m_TagString
       value: ColliderLimit
       objectReference: {fileID: 0}
+    - target: {fileID: 5267488584622526758, guid: a7b929dab13165544898980e7b22b0fb,
+        type: 3}
+      propertyPath: maskPrefab
+      value: 
+      objectReference: {fileID: 8940478367869546973, guid: 008d57e4ad22da74fa7a1ffcb93977e3,
+        type: 3}
     - target: {fileID: 5267488584622526759, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
       propertyPath: m_LocalPosition.x
