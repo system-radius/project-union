@@ -53,7 +53,10 @@ public class TouchController : MonoBehaviour
             }
             else
             {
-                MoveToTouch();
+                if (touch.phase == TouchPhase.Began)
+                {
+                    MoveToTouch();
+                }
             }
 
             if (touch.phase == TouchPhase.Ended)

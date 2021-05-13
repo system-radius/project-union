@@ -10,6 +10,8 @@ public class GridController : MonoBehaviour
 
     public const int SIZE_Y = 48 * MULTIPLIER;
 
+    public const float TRANSITION_TIME = 2f;
+
     public const float FILL_QUOTA = 0.85f;
 
     private int[,] field = new int[SIZE_X + 1, SIZE_Y + 1];
@@ -37,9 +39,15 @@ public class GridController : MonoBehaviour
 
     private int level = -1;
 
+    private GameObject continueTap;
+
     private GameObject levelImage;
 
     private GameObject divider;
+
+    private float transitionTimer = 0;
+
+    private bool transitionStart = false;
 
     public static float ComputeAngle(Vector3 startPos, Vector3 endPos)
     {
@@ -60,19 +68,66 @@ public class GridController : MonoBehaviour
         lineContainer = GameObject.FindGameObjectWithTag("LineContainer").transform;
         maskContainer = GameObject.FindGameObjectWithTag("MaskContainer").transform;
 
+        continueTap = GameObject.FindGameObjectWithTag("Finish");
+
         Reset();
     }
 
     void FixedUpdate()
     {
-        if (fillPercent >= FILL_QUOTA)
+        if (fillPercent >= FILL_QUOTA && !transitionStart)
         {
-            Reset();
+            // Will only display the full image if the divider is still available.
+            DisplayFullImage();
         }
+
+        if (transitionStart && !continueTap.activeSelf)
+        {
+            transitionTimer += Time.deltaTime;
+
+            if (transitionTimer >= TRANSITION_TIME)
+            {
+                continueTap.SetActive(true);
+            }
+        }
+
+        if (continueTap.activeSelf)
+        {
+            if (Input.touchCount > 0)
+            {
+                if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                {
+                    Reset();
+                }
+            }
+        }
+    }
+
+    private void DisplayFullImage()
+    {
+
+        if (transitionStart)
+        {
+            return;
+        }
+
+        // Fill the remaining spaces.
+        FillSpaces(new Vector2(0, 0), new Vector2(SIZE_X, SIZE_Y), 1, 1);
+
+        // Remove the divider.
+        Destroy(divider);
+
+        // Remove the lines created.
+        ClearLines();
+
+        transitionStart = true;
     }
 
     public void Reset()
     {
+        transitionTimer = 0;
+        transitionStart = false;
+
         InitializeField();
         fillableSpaces = CountSpaces(new Vector2(0, 0), new Vector2(SIZE_X, SIZE_Y), 1, 1);
         ComputeFillPercent();
@@ -84,13 +139,18 @@ public class GridController : MonoBehaviour
         }
         levelImage = Instantiate(levels[level]);
 
+        ClearLines();
+        SpawnDivider();
+        continueTap.SetActive(false);
+    }
+
+    private void ClearLines()
+    {
         foreach (Transform child in lineContainer.transform)
         {
             // Remove all of the children in the container.
             Destroy(child.gameObject);
         }
-
-        SpawnDivider();
     }
 
     public void SpawnDivider()
