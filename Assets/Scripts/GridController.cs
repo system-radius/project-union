@@ -88,7 +88,8 @@ public class GridController : MonoBehaviour
                     masks[x, y] = mask;
                 }
 
-                masks[x, y].GetComponent<SpriteMask>().enabled = false;
+                //masks[x, y].GetComponent<SpriteMask>().enabled = false;
+                masks[x, y].SetActive(false);
             }
         }
     }
@@ -292,7 +293,7 @@ public class GridController : MonoBehaviour
 
     public void ChangeMask(int x, int y)
     {
-        masks[x, y].GetComponent<SpriteMask>().enabled = field[x, y] == GridValue.FILLED ||
-                field[x, y] == GridValue.CRAWL;
+        masks[x, y].SetActive(field[x, y] == GridValue.FILLED ||
+                field[x, y] == GridValue.CRAWL);
     }
 }

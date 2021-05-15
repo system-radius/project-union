@@ -934,7 +934,7 @@ Transform:
   - {fileID: 1291386156}
   - {fileID: 1119650042}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1608147697
 SpriteRenderer:
@@ -1215,7 +1215,7 @@ PrefabInstance:
     - target: {fileID: 5267488584622526759, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5267488584622526759, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
