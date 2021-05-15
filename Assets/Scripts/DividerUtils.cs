@@ -95,13 +95,13 @@ public class DividerUtils : MonoBehaviour
         return UnitToExactNormalized(cX, cY);
     }
 
-    public static int GetGridValue(int[,] field, float x, float y)
+    public static GridValue GetGridValue(GridValue[,] field, float x, float y)
     {
         Vector2 coords = UnitToGridPoint(x, y);
 
         if (coords.x <= 0 || coords.x >= SIZE_X || coords.y <= 0 || coords.y >= SIZE_Y)
         {
-            return -1;
+            return GridValue.VOID;
         }
 
         return field[(int)coords.x, (int)coords.y];

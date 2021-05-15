@@ -77,7 +77,7 @@ public class TouchController : MonoBehaviour
         // Do not consider changes along the z-axis.
         touchPos.z = 0;
 
-        if (DividerUtils.GetGridValue(gridController.GetField(), touchPos.x, touchPos.y) != 0)
+        if (DividerUtils.GetGridValue(gridController.GetField(), touchPos.x, touchPos.y) != GridValue.SPACE)
         {
             // Return prematurely.
             return;
@@ -99,7 +99,7 @@ public class TouchController : MonoBehaviour
 
         return touchTime >= HOLD_CONST && DividerUtils.GetGridValue(
             gridController.GetField(), transform.position.x, transform.position.y
-            ) == 0;
+            ) == GridValue.SPACE;
     }
 
     void Rotate()

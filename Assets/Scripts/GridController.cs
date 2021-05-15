@@ -5,7 +5,7 @@ using UnityEngine;
 public class GridController : MonoBehaviour
 {
 
-    private int[,] field = new int[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
+    private GridValue[,] field = new GridValue[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
 
     private const int A = 0;
 
@@ -90,7 +90,7 @@ public class GridController : MonoBehaviour
         }
     }
 
-    public int[,] GetField()
+    public GridValue[,] GetField()
     {
         return field;
     }
@@ -180,7 +180,7 @@ public class GridController : MonoBehaviour
         // Fill the line along the y-axis.
         for (int x = (int)pointA.x; x <= (int)pointB.x; x++)
         {
-            field[x, (int)pointA.y] = 1;
+            field[x, (int)pointA.y] = GridValue.FILLED;
         }
 
         int down = CountSpaces(pointA, new Vector2(DividerUtils.SIZE_X, 0), 1, -1);
@@ -206,7 +206,7 @@ public class GridController : MonoBehaviour
     {
         for (int y = (int)pointB.y; y <= (int)pointA.y; y++)
         {
-            field[(int)pointA.x, y] = 1;
+            field[(int)pointA.x, y] = GridValue.FILLED;
         }
 
         int left = CountSpaces(pointB, new Vector2(0, DividerUtils.SIZE_Y), -1, 1);
@@ -251,7 +251,7 @@ public class GridController : MonoBehaviour
             for (int y = yA; y != yB + yUpdate; y += yUpdate)
             {
                 // Add to the total if the field value is 0.
-                total += field[x, y] == 0 ? 1 : 0;
+                total += field[x, y] == GridValue.SPACE ? 1 : 0;
             }
         }
 
@@ -271,9 +271,9 @@ public class GridController : MonoBehaviour
             for (int y = yA; y != yB + yUpdate; y += yUpdate)
             {
                 // Fill the coordinate with 1 if it is 0.
-                field[x, y] = field[x, y] == 0 ? 1 : field[x, y];
+                field[x, y] = field[x, y] == GridValue.SPACE ? GridValue.FILLED : field[x, y];
 
-                masks[x, y].GetComponent<SpriteMask>().enabled = field[x, y] == 1;
+                masks[x, y].GetComponent<SpriteMask>().enabled = field[x, y] == GridValue.FILLED;
             }
         }
 
