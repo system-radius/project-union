@@ -29,7 +29,7 @@ public class TouchController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
 
         // If a touch is registered...
@@ -37,7 +37,6 @@ public class TouchController : MonoBehaviour
         {
             // Just take the first touch instance.
             touch = Input.GetTouch(0);
-            touchTime += touch.deltaTime;
 
             if (CheckHold())
             {
@@ -46,7 +45,7 @@ public class TouchController : MonoBehaviour
             }
             else if (touch.tapCount == 2)
             {
-                if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Stationary)
+                if (touch.phase == TouchPhase.Began)
                 {
                     Rotate();
                     touch.phase = TouchPhase.Ended;
@@ -54,19 +53,28 @@ public class TouchController : MonoBehaviour
             }
             else
             {
-                if (touch.phase != TouchPhase.Ended)
+                if (touch.phase == TouchPhase.Began)
                 {
                     MoveToTouch();
                 }
             }
 
-            if (touch.phase == TouchPhase.Ended)
+            if (touch.phase.Equals(TouchPhase.Ended))
             {
-                // The touch has ended, reset the touch time.
                 touchTime = 0;
             }
         }
 
+    }
+
+    void FixedUpdate()
+    {
+        if (Input.touchCount > 0)
+        {
+            // Just take the first touch instance.
+            touch = Input.GetTouch(0);
+            touchTime += touch.deltaTime;
+        }
     }
 
     void MoveToTouch()
