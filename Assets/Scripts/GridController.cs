@@ -23,6 +23,8 @@ public class GridController : MonoBehaviour
 
     private int fillableSpaces = 0;
 
+    private int filledSpaces = 0;
+
     // Called when the scene starts.
     void Awake()
     {
@@ -49,7 +51,8 @@ public class GridController : MonoBehaviour
         }
 
         InitializeField();
-        fillableSpaces = CountSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
+        fillableSpaces = DividerUtils.ProcessField(field, new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), new Vector2(1, 1)).Count;
+        filledSpaces = 0;
         ComputeFillPercent();
 
         ClearLines();
@@ -180,82 +183,65 @@ public class GridController : MonoBehaviour
         // Fill the line along the y-axis.
         for (int x = (int)pointA.x; x <= (int)pointB.x; x++)
         {
-            field[x, (int)pointA.y] = GridValue.FILLED;
+            field[x, (int)pointA.y] = GridValue.CRAWL;
+            ChangeMask(x, (int)pointA.y);
         }
 
-        int down = CountSpaces(pointA, new Vector2(DividerUtils.SIZE_X, 0), 1, -1);
-        int up = CountSpaces(pointA, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
+        List<Vector2> down = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, -1));
+        List<Vector2> up = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, 1));
 
-        //Debug.Log(down + " > " + up);
-
-        if (down > up)
+        if (down.Count > up.Count)
         {
-            FillSpaces(pointA, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
-            //Debug.Log("Up!");
+            ChangeValue(up, GridValue.FILLED);
         }
         else
         {
-            FillSpaces(pointA, new Vector2(DividerUtils.SIZE_X, 0), 1, -1);
-            //Debug.Log("Down!");
+            ChangeValue(down, GridValue.FILLED);
         }
 
-        //PrintField();
+        //DividerUtils.PrintField(field);
     }
 
     private void FillVertical(Vector2 pointA, Vector2 pointB)
     {
         for (int y = (int)pointB.y; y <= (int)pointA.y; y++)
         {
-            field[(int)pointA.x, y] = GridValue.FILLED;
+            field[(int)pointA.x, y] = GridValue.CRAWL;
+            ChangeMask((int)pointA.x, y);
         }
 
-        int left = CountSpaces(pointB, new Vector2(0, DividerUtils.SIZE_Y), -1, 1);
-        int right = CountSpaces(pointB, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
+        List<Vector2> left = DividerUtils.ProcessField(field, pointB, pointA, new Vector2(-1, 1));
+        List<Vector2> right = DividerUtils.ProcessField(field, pointB, pointA, new Vector2(1, 1));
 
-        //Debug.Log(left + " > " + right);
-
-        if (left > right)
+        if (left.Count > right.Count)
         {
-            FillSpaces(pointB, new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
-            //Debug.Log("Right!");
+            ChangeValue(right, GridValue.FILLED);
         }
         else
         {
-            FillSpaces(pointB, new Vector2(0, DividerUtils.SIZE_Y), -1, 1);
-            //Debug.Log("Left!");
+            ChangeValue(left, GridValue.FILLED);
         }
 
-        //PrintField();
+        //DividerUtils.PrintField(field);
     }
 
-    public void ComputeFillPercent()
+    public void ComputeFillPercent(List<Vector2> coords = null)
     {
-        int currentSpaces = CountSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
+        int currentSpaces = coords == null ?
+            DividerUtils.ProcessField(
+                field,
+                new Vector2(0, 0),
+                new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y),
+                new Vector2(1, 1)
+            ).Count : fillableSpaces - (coords.Count + filledSpaces);
         fillPercent = (float)(fillableSpaces - currentSpaces) / (float)fillableSpaces;
 
-        Debug.Log("fill: " + fillPercent * 100f);
-    }
-
-    public int CountSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
-    {
-        int total = 0;
-
-        int xA = (int)pointA.x;
-        int yA = (int)pointA.y;
-
-        int xB = (int)pointB.x;
-        int yB = (int)pointB.y;
-
-        for (int x = xA; x != xB + xUpdate; x += xUpdate)
+        if (coords != null)
         {
-            for (int y = yA; y != yB + yUpdate; y += yUpdate)
-            {
-                // Add to the total if the field value is 0.
-                total += field[x, y] == GridValue.SPACE ? 1 : 0;
-            }
+            filledSpaces += coords.Count;
         }
 
-        return total;
+        Debug.Log("fill: " + fillPercent * 100f);
     }
 
     public void FillSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
@@ -273,10 +259,40 @@ public class GridController : MonoBehaviour
                 // Fill the coordinate with 1 if it is 0.
                 field[x, y] = field[x, y] == GridValue.SPACE ? GridValue.FILLED : field[x, y];
 
-                masks[x, y].GetComponent<SpriteMask>().enabled = field[x, y] == GridValue.FILLED;
+                ChangeMask(x, y);
             }
         }
 
         ComputeFillPercent();
+    }
+
+    public void ChangeValue(List<Vector2> coords, GridValue value)
+    {
+        foreach (Vector2 coord in coords) {
+
+            int x = (int)coord.x;
+            int y = (int)coord.y;
+
+            switch (value)
+            {
+                case GridValue.CRAWL:
+                case GridValue.FILLED:
+                    field[x, y] = field[x, y] == GridValue.SPACE ? GridValue.FILLED : field[x, y];
+                    break;
+                default:
+                    field[x, y] = value;
+                    break;
+            }
+
+            ChangeMask(x, y);
+        }
+
+        ComputeFillPercent(coords);
+    }
+
+    public void ChangeMask(int x, int y)
+    {
+        masks[x, y].GetComponent<SpriteMask>().enabled = field[x, y] == GridValue.FILLED ||
+                field[x, y] == GridValue.CRAWL;
     }
 }
