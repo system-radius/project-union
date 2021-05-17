@@ -29,6 +29,8 @@ public class DividerUtils : MonoBehaviour
 
     public const string TAG_SHOCK = "ShockWave";
 
+    public const string TAG_ENEMY_KILLER = "EnemyKiller";
+
     /**
      * Compute the angle between two points. The angle returned is useful for rotations.
      */

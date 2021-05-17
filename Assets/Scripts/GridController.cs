@@ -191,15 +191,7 @@ public class GridController : MonoBehaviour
         List<Vector2> down = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, -1));
         List<Vector2> up = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, 1));
 
-        if (down.Count > up.Count)
-        {
-            ChangeValue(up, GridValue.FILLED);
-        }
-        else
-        {
-            ChangeValue(down, GridValue.FILLED);
-        }
-
+        ProcessFill(down, up);
         //DividerUtils.PrintField(field);
     }
 
@@ -214,16 +206,48 @@ public class GridController : MonoBehaviour
         List<Vector2> left = DividerUtils.ProcessField(field, pointB, pointA, new Vector2(-1, 1));
         List<Vector2> right = DividerUtils.ProcessField(field, pointB, pointA, new Vector2(1, 1));
 
-        if (left.Count > right.Count)
+        ProcessFill(left, right);
+        //DividerUtils.PrintField(field);
+    }
+
+    private void ProcessFill(List<Vector2> sideA, List<Vector2> sideB)
+    {
+        if (EnemyManager.GetEnemyCount() == 0)
         {
-            ChangeValue(right, GridValue.FILLED);
+            // Fill everything if there are no more enemies.
+            ChangeValue(sideA, GridValue.FILLED);
+            ChangeValue(sideB, GridValue.FILLED);
+
+            return;
+        }
+
+        if (sideA.Count > sideB.Count)
+        {
+            ChangeValue(sideB, GridValue.FILLED);
+        }
+        else if (sideA.Count < sideB.Count)
+        {
+            ChangeValue(sideB, GridValue.FILLED);
         }
         else
         {
-            ChangeValue(left, GridValue.FILLED);
-        }
+            int sideAEnemies = EnemyManager.CountOnPosition(sideA);
+            int sideBEnemies = EnemyManager.CountOnPosition(sideB);
 
-        //DividerUtils.PrintField(field);
+            if (sideAEnemies > sideBEnemies)
+            {
+                ChangeValue(sideB, GridValue.FILLED);
+            }
+            else if (sideAEnemies < sideBEnemies)
+            {
+                ChangeValue(sideA, GridValue.FILLED);
+            }
+            else
+            {
+                // If everything is still equal, randomize.
+                ChangeValue(Random.Range(0, 2) == 0 ? sideA : sideB, GridValue.FILLED);
+            }
+        }
     }
 
     public void ComputeFillPercent(List<Vector2> coords = null)
@@ -260,7 +284,7 @@ public class GridController : MonoBehaviour
                 // Fill the coordinate with 1 if it is 0.
                 field[x, y] = field[x, y] == GridValue.SPACE ? GridValue.FILLED : field[x, y];
 
-                ChangeMask(x, y);
+                ChangeMask(x, y, true);
             }
         }
 
@@ -291,9 +315,9 @@ public class GridController : MonoBehaviour
         ComputeFillPercent(coords);
     }
 
-    public void ChangeMask(int x, int y)
+    public void ChangeMask(int x, int y, bool includeCrawl = false)
     {
-        masks[x, y].SetActive(field[x, y] == GridValue.FILLED ||
-                field[x, y] == GridValue.CRAWL);
+        masks[x, y].SetActive(field[x, y] == GridValue.FILLED || 
+            (includeCrawl && field[x, y] == GridValue.CRAWL));
     }
 }
