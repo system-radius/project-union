@@ -57,7 +57,10 @@ public class DivideSource : MonoBehaviour
         }
 
         active = true;
-        line = Instantiate(trailPrefab, transform.position, Quaternion.identity);
+        //line = Instantiate(trailPrefab, transform.position, Quaternion.identity);
+        line = Instantiate(trailPrefab, transform.position, transform.rotation);
+
+        line.transform.parent = gameObject.transform;
 
         // Cache the trail's line renderer.
         lineRenderer = line.GetComponent<LineRenderer>();

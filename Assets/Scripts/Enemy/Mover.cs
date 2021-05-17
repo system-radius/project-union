@@ -15,7 +15,7 @@ public class Mover : MonoBehaviour
     void Start()
     {
         // Decide on a random direction.
-        transform.Rotate(0, 0, Random.Range(0, 360));
+        transform.Rotate(0, 0, 45);
 
         // Cache the rigid body.
         rigidBody = GetComponent<Rigidbody2D>();
@@ -34,7 +34,6 @@ public class Mover : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        string name = collision.collider.name;
 
         ContactPoint2D contact = collision.contacts[0];
         rigidBody.velocity = Vector3.Reflect(pastVelocity, contact.normal);

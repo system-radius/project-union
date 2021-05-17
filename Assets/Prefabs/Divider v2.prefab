@@ -168,9 +168,11 @@ GameObject:
   - component: {fileID: 7958453587348471941}
   - component: {fileID: 2890852562430348339}
   - component: {fileID: -643139450609809176}
+  - component: {fileID: -5279368738465773511}
+  - component: {fileID: 3801378050473502425}
   m_Layer: 31
   m_Name: Divider v2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,3 +271,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
     type: 3}
+--- !u!114 &-5279368738465773511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7958453587348471938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8285b240c9af4408867cceb5f75649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!70 &3801378050473502425
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7958453587348471938}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.5, y: 2.28}
+  m_Direction: 0

@@ -21,6 +21,14 @@ public class DividerUtils : MonoBehaviour
     // The amount of space needed to be filled.
     public const float FILL_QUOTA = 0.85f;
 
+    public const string TAG_ENEMY = "Enemy";
+
+    public const string TAG_LIMIT = "ColliderLimit";
+
+    public const string TAG_PLAYER = "Player";
+
+    public const string TAG_SHOCK = "ShockWave";
+
     /**
      * Compute the angle between two points. The angle returned is useful for rotations.
      */

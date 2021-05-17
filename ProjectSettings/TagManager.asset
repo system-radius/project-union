@@ -11,6 +11,8 @@ TagManager:
   - ColliderLimit
   - LineContainer
   - MaskContainer
+  - Enemy
+  - ShockWave
   layers:
   - Default
   - TransparentFX

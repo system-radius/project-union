@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
 
-    private static GameObject instance;
+    private static GameController instance;
 
     // An array containing the pictures to be used as levels.
     public GameObject[] levelPrefabs;
@@ -26,6 +26,12 @@ public class GameController : MonoBehaviour
     // about the state of the game.
     private GridController gridController;
 
+    // The timer for when the player dies for whatever reason.
+    private float deathTimer = 0f;
+
+    // The time limit for spawning. May be lengthen or shorten.
+    private float deathLimiter = 2f;
+
     // The current time that has elapsed since the level has been completed.
     private float levelCompleteTimer = 0;
 
@@ -34,7 +40,7 @@ public class GameController : MonoBehaviour
 
     private int currentLevel = -1;
 
-    public static GameObject GetInstance()
+    public static GameController GetInstance()
     {
         // No need to worry about the instance being null.
         // On scene start, the instance is initialized in the awake method.
@@ -47,7 +53,7 @@ public class GameController : MonoBehaviour
     void Awake()
     {
         // Cache the instance of this game object to be accessible to every other object.
-        instance = gameObject;
+        instance = this;
 
         // Get the grid controller script from the grid container object.
         gridController = GameObject.FindGameObjectWithTag("GridController").GetComponent<GridController>();
@@ -64,6 +70,20 @@ public class GameController : MonoBehaviour
      */
     void FixedUpdate()
     {
+
+        if (divider == null) {
+
+            // Check for the respawn time.
+            deathTimer += Time.fixedDeltaTime;
+
+            if (deathTimer >= deathLimiter)
+            {
+                SpawnDivider();
+            }
+
+            // While the player is dead, do not do anything else.
+            return;
+        }
 
         // If the quota has been reached, and the transition has not started yet...
         if (gridController.GetFillPercent() >= DividerUtils.FILL_QUOTA && !transitionStart)
@@ -151,5 +171,11 @@ public class GameController : MonoBehaviour
         }
 
         divider = Instantiate(dividerPrefab);
+        deathTimer = 0f;
+    }
+
+    public GameObject GetDivider()
+    {
+        return divider;
     }
 }

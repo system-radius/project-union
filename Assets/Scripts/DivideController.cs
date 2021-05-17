@@ -22,6 +22,8 @@ public class DivideController : MonoBehaviour
 
     private Bullet[] bulletScript = new Bullet[SIDES];
 
+    private CapsuleCollider2D capsuleCollider;
+
     private Touch touch;
 
     private bool dividing = false;
@@ -30,6 +32,8 @@ public class DivideController : MonoBehaviour
 
     void Start()
     {
+        capsuleCollider = GetComponent<CapsuleCollider2D>();
+        capsuleCollider.enabled = false;
 
         GameObject gridContainer = GameObject.FindGameObjectWithTag("GridController");
         gridController = gridContainer.GetComponent<GridController>();
@@ -69,7 +73,7 @@ public class DivideController : MonoBehaviour
             return;
         }
 
-        if (touch.phase == TouchPhase.Ended)
+        if (touch.phase == TouchPhase.Ended || gameObject == null)
         {
             // If the current touch is lifted, the divide is stopped.
             StopDivide();
@@ -118,6 +122,7 @@ public class DivideController : MonoBehaviour
     public void StopDivide()
     {
         dividing = false;
+        capsuleCollider.enabled = false;
 
         for (int i = 0; i < SIDES; i++)
         {
@@ -153,6 +158,7 @@ public class DivideController : MonoBehaviour
         }
 
         dividing = true;
+        capsuleCollider.enabled = true;
 
         for (int i = 0; i < SIDES; i++)
         {
@@ -167,6 +173,8 @@ public class DivideController : MonoBehaviour
 
             // Activate the script for the divide source.
             sources[i].Activate(bullets[i]);
+
+            bullets[i].transform.parent = gameObject.transform;
         }
     }
 }

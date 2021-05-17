@@ -204,8 +204,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 719441381
+  m_SortingLayer: -1
   m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 0dd1c5d300573554bb5db12f59ba304b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -313,7 +313,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &611622806
 GameObject:
@@ -996,6 +996,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1934345339}
   - component: {fileID: 1934345338}
+  - component: {fileID: 1934345340}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1038,6 +1039,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1934345340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934345337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e0861d34a77cde4586dfcb9067b027e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2024993831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1228,7 @@ PrefabInstance:
     - target: {fileID: 5267488584622526759, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5267488584622526759, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}

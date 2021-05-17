@@ -25,7 +25,7 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "ColliderLimit")
+        if (collision.tag == DividerUtils.TAG_LIMIT)
         {
             // Process the hit for ColliderLimit tag.
             ProcessColliderLimit();

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1223853984368725585}
   m_Layer: 0
   m_Name: SpinnerMoverA
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45afb1abfb4713489cbb42a6ff5bb59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 30
 --- !u!50 &-830986579685634016
 Rigidbody2D:
   serializedVersion: 4
@@ -62,7 +62,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: ee323cb8c25ca4548a2acea02790173d, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
