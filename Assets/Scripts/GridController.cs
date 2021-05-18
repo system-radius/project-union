@@ -5,25 +5,31 @@ using UnityEngine;
 public class GridController : MonoBehaviour
 {
 
-    private GridValue[,] field = new GridValue[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
+    public GameObject maskPrefab;
 
     private const int A = 0;
 
     private const int B = 1;
 
+    private GridValue[,] field = new GridValue[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
+
+    private GameObject[,] masks = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
+
+    private List<Vector2> toFill;
+
+    private List<Vector2> pastFill;
+
     private Transform lineContainer;
 
     private Transform maskContainer;
-
-    public GameObject maskPrefab;
-
-    private GameObject[,] masks = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
 
     private float fillPercent = 0;
 
     private int fillableSpaces = 0;
 
     private int filledSpaces = 0;
+
+    private float maskLimit = 1;
 
     // Called when the scene starts.
     void Awake()
@@ -34,7 +40,45 @@ public class GridController : MonoBehaviour
         // Retrieve the container for the masks.
         maskContainer = GameObject.FindGameObjectWithTag("MaskContainer").transform;
 
+        toFill = new List<Vector2>();
+        pastFill = new List<Vector2>();
+
         Reset();
+    }
+
+    void FixedUpdate()
+    {
+
+        if (toFill.Count > 0)
+        {
+            maskLimit *= 1.25f;
+            maskLimit = maskLimit >= toFill.Count ? toFill.Count : maskLimit;
+
+            for (int i = 0; i < (int)maskLimit; i++)
+            {
+                Vector2 coord = toFill[0];
+                toFill.RemoveAt(0);
+
+                ChangeValue(coord, GridValue.FILLED);
+                pastFill.Add(coord);
+            }
+
+            if (toFill.Count == 0)
+            {
+                maskLimit = 1;
+                ComputeFillPercent();
+            }
+
+            //ComputeFillPercent(pastFill);
+        }
+        /*
+        else if (pastFill.Count > 0)
+        {
+            // Disable the collision for all of the mask specified in the coords.
+            while (pastFill.Count > 0) {
+                Vector2 coord = pastFill[0];
+            }
+        }/**/
     }
 
     public float GetFillPercent()
@@ -51,9 +95,11 @@ public class GridController : MonoBehaviour
         }
 
         InitializeField();
-        fillableSpaces = DividerUtils.ProcessField(field, new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), new Vector2(1, 1)).Count;
+        fillableSpaces = ForceCountSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
         filledSpaces = 0;
         ComputeFillPercent();
+
+        toFill.Clear();
 
         ClearLines();
     }
@@ -212,53 +258,97 @@ public class GridController : MonoBehaviour
 
     private void ProcessFill(List<Vector2> sideA, List<Vector2> sideB)
     {
-        if (EnemyManager.GetEnemyCount() == 0)
+        List<Vector2> fillList = new List<Vector2>();
+
+        int sideAEnemies = EnemyManager.CountOnPosition(sideA);
+        int sideBEnemies = EnemyManager.CountOnPosition(sideB);
+
+        if (sideAEnemies == 0 && sideBEnemies == 0)
         {
             // Fill everything if there are no more enemies.
-            ChangeValue(sideA, GridValue.FILLED);
-            ChangeValue(sideB, GridValue.FILLED);
+
+            toFill.AddRange(InterweaveLists(sideA, sideB));
 
             return;
         }
 
         if (sideA.Count > sideB.Count)
         {
-            ChangeValue(sideB, GridValue.FILLED);
+            //ChangeValue(sideB, GridValue.FILLED);
+            fillList.AddRange(sideB);
         }
         else if (sideA.Count < sideB.Count)
         {
-            ChangeValue(sideB, GridValue.FILLED);
+            //ChangeValue(sideB, GridValue.FILLED);
+            fillList.AddRange(sideA);
         }
         else
         {
-            int sideAEnemies = EnemyManager.CountOnPosition(sideA);
-            int sideBEnemies = EnemyManager.CountOnPosition(sideB);
-
             if (sideAEnemies > sideBEnemies)
             {
-                ChangeValue(sideB, GridValue.FILLED);
+                //ChangeValue(sideB, GridValue.FILLED);
+                fillList.AddRange(sideB);
             }
             else if (sideAEnemies < sideBEnemies)
             {
-                ChangeValue(sideA, GridValue.FILLED);
+                //ChangeValue(sideA, GridValue.FILLED);
+                fillList.AddRange(sideA);
             }
             else
             {
                 // If everything is still equal, randomize.
-                ChangeValue(Random.Range(0, 2) == 0 ? sideA : sideB, GridValue.FILLED);
+                fillList.AddRange(Random.Range(0, 2) == 0 ? sideA : sideB);
             }
         }
+
+        toFill.AddRange(fillList);
+    }
+
+    public List<Vector2> InterweaveLists(List<Vector2> listA, List<Vector2> listB, int weave = 2)
+    {
+        List<Vector2> weavedList = new List<Vector2>();
+
+        bool other = false;
+        int weaveCounter = 0;
+        while (listA.Count > 0 || listB.Count > 0)
+        {
+            if (other)
+            {
+                if (listB.Count == 0)
+                {
+                    other = !other;
+                    continue;
+                }
+                weavedList.Add(listB[0]);
+                listB.RemoveAt(0);
+            }
+            else
+            {
+                if (listA.Count == 0)
+                {
+                    other = !other;
+                    continue;
+                }
+                weavedList.Add(listA[0]);
+                listA.RemoveAt(0);
+            }
+
+            if (weaveCounter + 1 == weave)
+            {
+                weaveCounter = 0;
+                other = !other;
+            }
+
+            weaveCounter++;
+        }
+
+        return weavedList;
     }
 
     public void ComputeFillPercent(List<Vector2> coords = null)
     {
         int currentSpaces = coords == null ?
-            DividerUtils.ProcessField(
-                field,
-                new Vector2(0, 0),
-                new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y),
-                new Vector2(1, 1)
-            ).Count : fillableSpaces - (coords.Count + filledSpaces);
+            ForceCountSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1) : fillableSpaces - (coords.Count + filledSpaces);
         fillPercent = (float)(fillableSpaces - currentSpaces) / (float)fillableSpaces;
 
         if (coords != null)
@@ -269,7 +359,28 @@ public class GridController : MonoBehaviour
         Debug.Log("fill: " + fillPercent * 100f);
     }
 
-    public void FillSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
+    public int ForceCountSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
+    {
+        int results = 0;
+        int xA = (int)pointA.x;
+        int yA = (int)pointA.y;
+
+        int xB = (int)pointB.x;
+        int yB = (int)pointB.y;
+
+        for (int x = xA; x != xB + xUpdate; x += xUpdate)
+        {
+            for (int y = yA; y != yB + yUpdate; y += yUpdate)
+            {
+                // Count the coordinate if it is 0.
+                results += field[x, y] == GridValue.SPACE ? 1 : 0;
+            }
+        }
+
+        return results;
+    }
+
+    public void ForceFillSpaces(Vector2 pointA, Vector2 pointB, int xUpdate, int yUpdate)
     {
         int xA = (int)pointA.x;
         int yA = (int)pointA.y;
@@ -291,28 +402,32 @@ public class GridController : MonoBehaviour
         ComputeFillPercent();
     }
 
-    public void ChangeValue(List<Vector2> coords, GridValue value)
+    public void ChangeValues(List<Vector2> coords, GridValue value)
     {
         foreach (Vector2 coord in coords) {
-
-            int x = (int)coord.x;
-            int y = (int)coord.y;
-
-            switch (value)
-            {
-                case GridValue.CRAWL:
-                case GridValue.FILLED:
-                    field[x, y] = field[x, y] == GridValue.SPACE ? GridValue.FILLED : field[x, y];
-                    break;
-                default:
-                    field[x, y] = value;
-                    break;
-            }
-
-            ChangeMask(x, y);
+            ChangeValue(coord, value);            
         }
 
         ComputeFillPercent(coords);
+    }
+
+    public void ChangeValue(Vector2 coord, GridValue value)
+    {
+        int x = (int)coord.x;
+        int y = (int)coord.y;
+
+        switch (value)
+        {
+            case GridValue.CRAWL:
+            case GridValue.FILLED:
+                field[x, y] = field[x, y] == GridValue.SPACE ? GridValue.FILLED : field[x, y];
+                break;
+            default:
+                field[x, y] = value;
+                break;
+        }
+
+        ChangeMask(x, y);
     }
 
     public void ChangeMask(int x, int y, bool includeCrawl = false)

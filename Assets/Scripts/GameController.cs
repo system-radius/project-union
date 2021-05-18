@@ -152,7 +152,7 @@ public class GameController : MonoBehaviour
         }
 
         // Fill the remaining spaces.
-        gridController.FillSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
+        gridController.ForceFillSpaces(new Vector2(0, 0), new Vector2(DividerUtils.SIZE_X, DividerUtils.SIZE_Y), 1, 1);
 
         // Remove the divider.
         Destroy(divider);

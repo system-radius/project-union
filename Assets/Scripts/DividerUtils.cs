@@ -130,7 +130,8 @@ public class DividerUtils : MonoBehaviour
 
         // The list of the coordinates to be visited.
         List<Vector2> frontier = new List<Vector2>();
-        frontier.Add(FindStartPos(field, startPos, endPos, update));
+        frontier.Add(FindStartPos(field, startPos, endPos, ComputeUpdateVector(startPos, endPos, update)));
+        frontier.Add(FindStartPos(field, endPos, startPos, ComputeUpdateVector(endPos, startPos, update)));
 
         while (frontier.Count > 0)
         {
@@ -153,6 +154,18 @@ public class DividerUtils : MonoBehaviour
         }
 
         return visited;
+    }
+
+    private static Vector2 ComputeUpdateVector(Vector2 pointA, Vector2 pointB, Vector2 update)
+    {
+        Vector2 result = new Vector2();
+
+        Vector2 diff = pointB - pointA ;
+
+        result.x = diff.x == 0 ? update.x : diff.x < 0 ? -1 : 1;
+        result.y = diff.y == 0 ? update.y : diff.y < 0 ? -1 : 1;
+
+        return result;
     }
 
     /**
