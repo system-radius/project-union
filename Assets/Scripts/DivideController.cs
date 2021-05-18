@@ -24,6 +24,8 @@ public class DivideController : MonoBehaviour
 
     private CapsuleCollider2D capsuleCollider;
 
+    private Animator animator;
+
     private Touch touch;
 
     private bool dividing = false;
@@ -32,6 +34,8 @@ public class DivideController : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         capsuleCollider = GetComponent<CapsuleCollider2D>();
         capsuleCollider.enabled = false;
 
@@ -124,6 +128,8 @@ public class DivideController : MonoBehaviour
         dividing = false;
         capsuleCollider.enabled = false;
 
+        ResetAnimator();
+
         for (int i = 0; i < SIDES; i++)
         {
             if (!lineComplete)
@@ -160,6 +166,8 @@ public class DivideController : MonoBehaviour
         dividing = true;
         capsuleCollider.enabled = true;
 
+        ResetAnimator();
+
         for (int i = 0; i < SIDES; i++)
         {
             // Get the source.
@@ -176,5 +184,10 @@ public class DivideController : MonoBehaviour
 
             bullets[i].transform.parent = gameObject.transform;
         }
+    }
+
+    public void ResetAnimator()
+    {
+        animator.SetBool("Dividing", dividing);
     }
 }
