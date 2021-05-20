@@ -77,7 +77,7 @@ public class DivideController : MonoBehaviour
             return;
         }
 
-        if (touch.phase == TouchPhase.Ended || gameObject == null)
+        if (gameObject == null)
         {
             // If the current touch is lifted, the divide is stopped.
             StopDivide();
@@ -100,6 +100,12 @@ public class DivideController : MonoBehaviour
     private void CreateLine()
     {
         gridController.CreateLine(bullets);
+
+        foreach (GameObject bullet in bullets)
+        {
+            // Remove parent.
+            bullet.transform.parent = null;
+        }
     }
 
     private bool HasAllHit()
@@ -189,5 +195,10 @@ public class DivideController : MonoBehaviour
     public void ResetAnimator()
     {
         animator.SetBool("Dividing", dividing);
+    }
+
+    public bool IsDividing()
+    {
+        return dividing;
     }
 }

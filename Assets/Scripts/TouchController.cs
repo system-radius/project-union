@@ -35,35 +35,38 @@ public class TouchController : MonoBehaviour
         // If a touch is registered...
         if (Input.touchCount > 0)
         {
-            // Just take the first touch instance.
-            touch = Input.GetTouch(0);
+            ProcessTouch(Input.GetTouch(0));
+            return;
+        }
 
-            if (CheckHold())
+        if (Input.GetMouseButtonDown(0))
+        {
+            touch.position = Input.mousePosition;
+            MoveToTouch();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Rotate();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (DividerUtils.GetGridValue(
+                gridController.GetField(), transform.position.x, transform.position.y) == GridValue.SPACE)
             {
-                //Debug.Log("(" + transform.position.x + ", " + transform.position.y + ") = " + gridController.GetGridValue(transform.position.x, transform.position.y));
+                touch.phase = TouchPhase.Stationary;
                 divideController.Divide(touch);
             }
-            else if (touch.tapCount == 2)
+        }
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (divideController.IsDividing())
             {
-                if (touch.phase == TouchPhase.Began)
-                {
-                    Rotate();
-                    touch.phase = TouchPhase.Ended;
-                }
-            }
-            else
-            {
-                if (touch.phase == TouchPhase.Began)
-                {
-                    MoveToTouch();
-                }
-            }
-
-            if (touch.phase.Equals(TouchPhase.Ended))
-            {
-                touchTime = 0;
+                divideController.StopDivide();
             }
         }
+
 
     }
 
@@ -74,6 +77,42 @@ public class TouchController : MonoBehaviour
             // Just take the first touch instance.
             touch = Input.GetTouch(0);
             touchTime += touch.deltaTime;
+        }
+    }
+
+    private void ProcessTouch(Touch tempTouch)
+    {
+        // Just take the first touch instance.
+        touch = tempTouch;
+
+        if (CheckHold())
+        {
+            //Debug.Log("(" + transform.position.x + ", " + transform.position.y + ") = " + gridController.GetGridValue(transform.position.x, transform.position.y));
+            divideController.Divide(touch);
+        }
+        else if (touch.tapCount == 2)
+        {
+            if (touch.phase == TouchPhase.Began)
+            {
+                Rotate();
+                touch.phase = TouchPhase.Ended;
+            }
+        }
+        else
+        {
+            if (touch.phase == TouchPhase.Began)
+            {
+                MoveToTouch();
+            }
+        }
+
+        if (touch.phase.Equals(TouchPhase.Ended))
+        {
+            if (divideController.IsDividing())
+            {
+                divideController.StopDivide();
+            }
+            touchTime = 0;
         }
     }
 

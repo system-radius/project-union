@@ -119,6 +119,13 @@ public class GameController : MonoBehaviour
                     // Reset the whole level.
                     Reset();
                 }
+
+                return;
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Reset();
             }
         }
     }
