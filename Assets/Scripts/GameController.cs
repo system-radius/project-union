@@ -55,6 +55,8 @@ public class GameController : MonoBehaviour
         // Cache the instance of this game object to be accessible to every other object.
         instance = this;
 
+        gameObject.AddComponent<EnemyManager>();
+
         // Get the grid controller script from the grid container object.
         gridController = GameObject.FindGameObjectWithTag("GridController").GetComponent<GridController>();
 
@@ -123,6 +125,7 @@ public class GameController : MonoBehaviour
 
     public void Reset()
     {
+
         transitionStart = false;
         levelCompleteTimer = 0;
 
@@ -130,6 +133,8 @@ public class GameController : MonoBehaviour
         SpawnDivider();
 
         currentLevel = currentLevel + 1 >= levelPrefabs.Length ? 0 : currentLevel + 1;
+
+        EnemyManager.ResetEnemies();
 
         if (levelImage != null)
         {
@@ -177,5 +182,10 @@ public class GameController : MonoBehaviour
     public GameObject GetDivider()
     {
         return divider;
+    }
+
+    public int GetLevel()
+    {
+        return currentLevel;
     }
 }

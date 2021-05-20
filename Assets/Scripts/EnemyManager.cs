@@ -4,20 +4,38 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-
-    public GameObject enemyPrefab;
-
     private static EnemyManager instance;
 
     private List<GameObject> enemies;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         instance = this;
         enemies = new List<GameObject>();
+    }
 
-        enemies.Add(Instantiate(enemyPrefab, transform));
+    public void Reset()
+    {
+        foreach (GameObject enemy in enemies)
+        {
+            // Destroy all enemies
+            Destroy(enemy);
+        }
+
+        enemies.Clear();
+        List<EnemyData> enemyData = EnemySpawnData.GetSpawnList(GameController.GetInstance().GetLevel());
+
+        foreach (EnemyData data in enemyData)
+        {
+            GameObject prefab = data.GetPrefab();
+            int count = data.GetCount();
+
+            for (int i = 0; i < count; i++)
+            {
+                enemies.Add(Instantiate(prefab, transform));
+            }
+        }
     }
 
     // Update is called once per frame
@@ -35,6 +53,11 @@ public class EnemyManager : MonoBehaviour
     public static int GetEnemyCount()
     {
         return instance.enemies.Count;
+    }
+
+    public static void ResetEnemies()
+    {
+        instance.Reset();
     }
 
     public static int CountOnPosition(List<Vector2> coords)

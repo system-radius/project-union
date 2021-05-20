@@ -30,6 +30,7 @@ public class Mover : MonoBehaviour
     void FixedUpdate()
     {
         pastVelocity = rigidBody.velocity;
+        rigidBody.velocity = transform.up * speed;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -64,6 +65,9 @@ public class Mover : MonoBehaviour
         // rotate the object by the same ammount we changed its velocity
         Quaternion rotation = Quaternion.FromToRotation(pastVelocity, rigidBody.velocity);
         transform.rotation = rotation * transform.rotation;
+
+        // Rotate slightly to avoid getting stuck
+        transform.Rotate(0, 0, 1);
     }
 
 }

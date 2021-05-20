@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9126902638113991352}
   m_Layer: 0
   m_Name: SpinnerA
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,3 +94,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03311b593d8a944787dc001c53fae63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  angle: 5

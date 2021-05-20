@@ -1130,14 +1130,27 @@ PrefabInstance:
       propertyPath: m_TagString
       value: ColliderLimit
       objectReference: {fileID: 0}
+    - target: {fileID: 751639085, guid: a7b929dab13165544898980e7b22b0fb, type: 3}
+      propertyPath: m_Layer
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 1993149396, guid: a7b929dab13165544898980e7b22b0fb, type: 3}
       propertyPath: m_TagString
       value: ColliderLimit
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993149396, guid: a7b929dab13165544898980e7b22b0fb, type: 3}
+      propertyPath: m_Layer
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 1335483986962246562, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
       propertyPath: m_TagString
       value: ColliderLimit
+      objectReference: {fileID: 0}
+    - target: {fileID: 1335483986962246562, guid: a7b929dab13165544898980e7b22b0fb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5267488584622526758, guid: a7b929dab13165544898980e7b22b0fb,
         type: 3}
@@ -1261,6 +1274,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: ColliderLimit
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027216308122023667, guid: a7b929dab13165544898980e7b22b0fb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7b929dab13165544898980e7b22b0fb, type: 3}

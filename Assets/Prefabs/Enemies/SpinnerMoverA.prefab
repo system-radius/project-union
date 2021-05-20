@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -830986579685634016}
   - component: {fileID: 1223853984368725585}
   - component: {fileID: 7479579452137333072}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: SpinnerMoverA
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45afb1abfb4713489cbb42a6ff5bb59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+  speed: 10
 --- !u!50 &-830986579685634016
 Rigidbody2D:
   serializedVersion: 4
@@ -108,6 +108,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpinnerA
+      objectReference: {fileID: 0}
+    - target: {fileID: 9126902638113991334, guid: a5c2151352215e94bbd317177c95f0b3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 9126902638113991354, guid: a5c2151352215e94bbd317177c95f0b3,
         type: 3}
