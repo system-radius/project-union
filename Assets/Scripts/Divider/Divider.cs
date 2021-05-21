@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DivideController : MonoBehaviour
+public class Divider : MonoBehaviour
 {
-
-    public GameObject bulletPrefab;
 
     private GridController gridController;
 
@@ -14,19 +12,13 @@ public class DivideController : MonoBehaviour
     // There are only two divide sources.
     private GameObject[] divideSource = new GameObject[SIDES];
 
-    private GameObject[] fillDetect = new GameObject[SIDES];
-
-    private GameObject[] bullets = new GameObject[SIDES];
-
     private DivideSource[] sources = new DivideSource[SIDES];
 
-    private Bullet[] bulletScript = new Bullet[SIDES];
+    private List<GameObject> bullets;
 
     private CapsuleCollider2D capsuleCollider;
 
     private Animator animator;
-
-    private Touch touch;
 
     private bool dividing = false;
 
@@ -34,6 +26,7 @@ public class DivideController : MonoBehaviour
 
     void Start()
     {
+        bullets = new List<GameObject>();
         animator = GetComponent<Animator>();
 
         capsuleCollider = GetComponent<CapsuleCollider2D>();
@@ -43,7 +36,6 @@ public class DivideController : MonoBehaviour
         gridController = gridContainer.GetComponent<GridController>();
 
         int divideCounter = 0;
-        int fillCounter = 0;
         foreach (Transform child in transform)
         {
             if (child.tag == "Divide Source" && divideCounter < divideSource.Length)
@@ -52,14 +44,9 @@ public class DivideController : MonoBehaviour
                 sources[divideCounter] = child.gameObject.GetComponent<DivideSource>();
                 divideCounter++;
             }
-            else if (child.tag == "Fill Detection" && fillCounter < fillDetect.Length)
-            {
-                fillDetect[fillCounter] = child.gameObject;
-                fillCounter++;
-            }
 
             // Check if the two arrays have been filled.
-            if (fillCounter >= fillDetect.Length && divideCounter >= divideSource.Length)
+            if (divideCounter >= divideSource.Length)
             {
                 // exit from the loop if they are.
                 break;
@@ -93,19 +80,27 @@ public class DivideController : MonoBehaviour
             lineComplete = true;
             CreateLine();
             DeactivateSources();
-            touch.phase = TouchPhase.Ended;
         }
     }
 
     private void CreateLine()
     {
-        gridController.CreateLine(bullets);
 
+        // Get the bullets from the source.
+        foreach (DivideSource source in sources)
+        {
+            bullets.Add(source.GetBullet());
+        }
+
+        gridController.CreateLine(bullets);
+        CompleteSources();
+        /*
         foreach (GameObject bullet in bullets)
         {
             // Remove parent.
             bullet.transform.parent = null;
         }
+        /**/
     }
 
     private bool HasAllHit()
@@ -114,13 +109,14 @@ public class DivideController : MonoBehaviour
 
         for (int i = 0; i < SIDES; i++)
         {
-            if (bulletScript[i] == null)
+            // Check the bullets from the source.
+            if (sources[i] == null)
             {
                 // Return false right away if a script is not available.
                 return false;
             }
 
-            result = result && bulletScript[i].HasHit();
+            result = result && sources[i].HasHit();
         }
 
         return result;
@@ -135,15 +131,6 @@ public class DivideController : MonoBehaviour
         capsuleCollider.enabled = false;
 
         ResetAnimator();
-
-        for (int i = 0; i < SIDES; i++)
-        {
-            if (!lineComplete)
-            {
-                Destroy(bullets[i]);
-            }
-        }
-
         DeactivateSources();
 
         lineComplete = false;
@@ -151,24 +138,34 @@ public class DivideController : MonoBehaviour
 
     private void DeactivateSources()
     {
+        Debug.Log("Deactivated sources!");
         for (int i = 0; i < SIDES; i++)
         {
             sources[i].Deactivate();
         }
     }
 
+    private void CompleteSources()
+    {
+        Debug.Log("Completed sources!");
+        for (int i = 0; i < SIDES; i++)
+        {
+            sources[i].Complete();
+        }
+    }
+
     /**
      * Initialize the dividing state.
      */
-    public void Divide(Touch touch)
+    public void Divide()
     {
-        this.touch = touch;
         if (dividing)
         {
             // Do not re-initialize if already dividing.
             return;
         }
 
+        bullets.Clear();
         dividing = true;
         capsuleCollider.enabled = true;
 
@@ -176,19 +173,8 @@ public class DivideController : MonoBehaviour
 
         for (int i = 0; i < SIDES; i++)
         {
-            // Get the source.
-            GameObject divideSrc = divideSource[i];
-
-            // Generate a bullet.
-            bullets[i] = Instantiate(bulletPrefab, divideSrc.transform.position, divideSrc.transform.rotation);
-
-            // Cache the bullet's script.
-            bulletScript[i] = bullets[i].GetComponent<Bullet>();
-
             // Activate the script for the divide source.
-            sources[i].Activate(bullets[i]);
-
-            bullets[i].transform.parent = gameObject.transform;
+            sources[i].Activate();
         }
     }
 
@@ -200,5 +186,10 @@ public class DivideController : MonoBehaviour
     public bool IsDividing()
     {
         return dividing;
+    }
+
+    public int GetBulletCount()
+    {
+        return bullets.Count;
     }
 }

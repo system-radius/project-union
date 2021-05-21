@@ -145,7 +145,7 @@ public class GridController : MonoBehaviour
         return field;
     }
 
-    public void CreateLine(GameObject[] contactPoints)
+    public void CreateLine(List<GameObject> contactPoints)
     {
         Fill(contactPoints);
 
@@ -167,7 +167,7 @@ public class GridController : MonoBehaviour
         line.useWorldSpace = true;
 
         line.gameObject.transform.SetParent(lineContainer.transform);
-        for (int i = 0; i < contactPoints.Length; i++)
+        for (int i = 0; i < contactPoints.Count; i++)
         {
             contactPoints[i].transform.SetParent(lineContainer.transform);
         }
@@ -195,9 +195,9 @@ public class GridController : MonoBehaviour
         col.gameObject.tag = "ColliderLimit";
     }
 
-    private void Fill(GameObject[] contactPoints)
+    private void Fill(List<GameObject> contactPoints)
     {
-        int length = contactPoints.Length;
+        int length = contactPoints.Count;
 
         Vector2[] gridCoords = new Vector2[length];
         for (int i = 0; i < length; i++)

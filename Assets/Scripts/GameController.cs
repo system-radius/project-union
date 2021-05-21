@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class GameController : MonoBehaviour
 
     // The prompt text that displays "Tap to continue."
     private GameObject continueTap;
+
+    private GameObject lastText;
 
     // The current image for the level.
     private GameObject levelImage;
@@ -47,6 +50,27 @@ public class GameController : MonoBehaviour
         return instance;
     }
 
+    public static void DisplayStats()
+    {
+        // Reset the contents.
+        string stats = "";
+
+        if (instance.divider != null)
+        {
+            Divider dividerSource = instance.divider.GetComponent<Divider>();
+
+            stats += "Divider status: alive\n";
+            stats += "Division: " + dividerSource.IsDividing() + "\n";
+            stats += "Bullets hit: " + dividerSource.GetBulletCount() + "\n";
+        }
+        else
+        {
+            stats += "Divider status: dead\n";
+        }
+
+        instance.lastText.GetComponent<TextMeshProUGUI>().text = stats;
+    }
+
     /**
      * Called on scene start.
      */
@@ -63,6 +87,8 @@ public class GameController : MonoBehaviour
         // Get the continue prompt instance.
         continueTap = GameObject.FindGameObjectWithTag("Finish");
 
+        lastText = GameObject.FindGameObjectWithTag("EditorOnly");
+
         // Call to reset every thing as first step.
         Reset();
     }
@@ -72,7 +98,7 @@ public class GameController : MonoBehaviour
      */
     void FixedUpdate()
     {
-
+        DisplayStats();
         if (divider == null) {
 
             // Check for the respawn time.

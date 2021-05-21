@@ -19,13 +19,13 @@ public class TouchController : MonoBehaviour
 
     private GridController gridController;
 
-    private DivideController divideController;
+    private Divider divideController;
 
     void Start()
     {
         GameObject gridContainer = GameObject.FindGameObjectWithTag("GridController");
         gridController = gridContainer.GetComponent<GridController>();
-        divideController = GetComponent<DivideController>();
+        divideController = GetComponent<Divider>();
     }
 
     // Update is called once per frame
@@ -56,7 +56,7 @@ public class TouchController : MonoBehaviour
                 gridController.GetField(), transform.position.x, transform.position.y) == GridValue.SPACE)
             {
                 touch.phase = TouchPhase.Stationary;
-                divideController.Divide(touch);
+                divideController.Divide();
             }
         }
         else if (Input.GetKeyUp(KeyCode.Space))
@@ -88,7 +88,7 @@ public class TouchController : MonoBehaviour
         if (CheckHold())
         {
             //Debug.Log("(" + transform.position.x + ", " + transform.position.y + ") = " + gridController.GetGridValue(transform.position.x, transform.position.y));
-            divideController.Divide(touch);
+            divideController.Divide();
         }
         else if (touch.tapCount == 2)
         {

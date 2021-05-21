@@ -75,6 +75,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
     type: 3}
+  bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
+    type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 1610612736
@@ -122,6 +124,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
+    type: 3}
+  bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
     type: 3}
   layerMask:
     serializedVersion: 2
@@ -271,8 +275,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede07ac80a20a9c40be2a6cc6149c979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
-    type: 3}
 --- !u!114 &-5279368738465773511
 MonoBehaviour:
   m_ObjectHideFlags: 0

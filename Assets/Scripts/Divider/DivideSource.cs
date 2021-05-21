@@ -6,19 +6,28 @@ public class DivideSource : MonoBehaviour
 {
     public GameObject trailPrefab;
 
+    public GameObject bulletPrefab;
+
     [SerializeField] private LayerMask layerMask;
 
+    // This divide source is always the source.
     private const int SOURCE = 0;
 
+    // The bullet is always the target.
     private const int TARGET = 1;
 
+    // The generated line.
     private GameObject line;
+
+    private GameObject bullet;
 
     private LineRenderer lineRenderer;
 
     private Transform targetTransform;
 
     private CapsuleCollider2D capsuleCollider;
+
+    private Bullet bulletSource;
 
     private bool active = false;
 
@@ -37,7 +46,7 @@ public class DivideSource : MonoBehaviour
         
     }
 
-    public void Deactivate()
+    private void ResetStatus()
     {
         if (!active)
         {
@@ -50,7 +59,22 @@ public class DivideSource : MonoBehaviour
         Destroy(line);
     }
 
-    public void Activate(GameObject bullet)
+    public void Complete()
+    {
+        ResetStatus();
+    }
+
+    public void Deactivate()
+    {
+        if (!active)
+        {
+            return;
+        }
+        ResetStatus();
+        Destroy(bullet);
+    }
+
+    public void Activate()
     {
         if (active) {
             return;
@@ -59,6 +83,9 @@ public class DivideSource : MonoBehaviour
         active = true;
         //line = Instantiate(trailPrefab, transform.position, Quaternion.identity);
         line = Instantiate(trailPrefab, transform.position, transform.rotation);
+        bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+
+        bulletSource = bullet.GetComponent<Bullet>();
 
         line.transform.parent = gameObject.transform;
 
@@ -73,5 +100,15 @@ public class DivideSource : MonoBehaviour
         lineRenderer.SetPosition(TARGET, targetTransform.position);
 
         capsuleCollider.transform.rotation = transform.rotation;
+    }
+
+    public bool HasHit()
+    {
+        return bullet != null && bulletSource.HasHit();
+    }
+
+    public GameObject GetBullet()
+    {
+        return bullet;
     }
 }
