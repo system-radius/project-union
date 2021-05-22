@@ -74,11 +74,18 @@ public class TouchController : MonoBehaviour
 
     }
 
+    void FixedUpdate()
+    {
+        if (Input.touchCount > 0)
+        {
+            touchTime += Input.GetTouch(0).deltaTime;
+        }
+    }
+
     private void ProcessTouch(Touch tempTouch)
     {
         // Just take the first touch instance.
         touch = tempTouch;
-        touchTime += touch.deltaTime;
 
         if (CheckHold())
         {
@@ -117,7 +124,6 @@ public class TouchController : MonoBehaviour
 
     bool CheckHold()
     {
-
         return touchTime >= HOLD_CONST && divideController.IsAllowedDivide();
     }
 
