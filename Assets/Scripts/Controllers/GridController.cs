@@ -65,6 +65,21 @@ public class GridController
         return instance.field;
     }
 
+    /**
+     * Create a line on the contact points.
+     */
+    public static List<Vector2> CreateLine(List<Vector3> contactPoints)
+    {
+        DividerUtils.PrintContactPoints(contactPoints);
+
+        return instance.Fill(contactPoints);
+        //instance.Fill(contactPoints);
+    }
+
+    private const int A = 0;
+
+    private const int B = 1;
+
     // The main focus in this class. The storage for all values in the field.
     private GridValue[,] field;
 
@@ -92,4 +107,195 @@ public class GridController
             }
         }
     }
+
+    /**
+     * Execution point for changing the values on the grid.
+     * This will return the list of coordinates to be filled gradually.
+     */
+    private List<Vector2> Fill(List<Vector3> contactPoints)
+    {
+        List<Vector2> result = new List<Vector2>();
+
+        List<Vector2> gridCoords = new List<Vector2>();
+        foreach (Vector2 contactPoint in contactPoints)
+        {
+            gridCoords.Add(DividerUtils.UnitToGridPoint(contactPoint.x, contactPoint.y));
+        }
+
+        // Retrieve the points from the grid coords list.
+        Vector2 pointA = gridCoords[A];
+        Vector2 pointB = gridCoords[B];
+
+        bool horizontal = pointA.y - pointB.y == 0;
+        if (horizontal)
+        {
+            result.AddRange(FillHorizontal(pointA, pointB));
+        }
+        else
+        {
+            result.AddRange(FillVertical(pointA, pointB));
+        }
+
+        return result;
+    }
+
+    private List<Vector2> FillHorizontal(Vector2 pointA, Vector2 pointB)
+    {
+        List<Vector2> result = new List<Vector2>();
+
+        for (int x = (int)pointA.x; x <= (int)pointB.x; x++)
+        {
+            field[x, (int)pointA.y] = GridValue.CRAWL;
+        }
+
+        List<Vector2> down = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, -1));
+        List<Vector2> up = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, 1));
+
+        result.AddRange(ProcessFill(down, up));
+
+
+        return result;
+    }
+
+    private List<Vector2> FillVertical(Vector2 pointA, Vector2 pointB)
+    {
+        List<Vector2> result = new List<Vector2>();
+
+        for (int y = (int)pointB.y; y <= (int)pointA.y; y++)
+        {
+            field[(int)pointA.x, y] = GridValue.CRAWL;
+        }
+
+        List<Vector2> left = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(-1, 1));
+        List<Vector2> right = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, 1));
+
+        result.AddRange(ProcessFill(left, right));
+
+        return result;
+    }
+
+    private List<Vector2> ProcessFill(List<Vector2> sideA, List<Vector2> sideB)
+    {
+        List<Vector2> fillList = new List<Vector2>();
+
+        //int sideAEnemies = EnemyManager.CountOnPosition(sideA);
+        //int sideBEnemies = EnemyManager.CountOnPosition(sideB);
+
+        /*
+        if (sideAEnemies == 0 && sideBEnemies == 0)
+        {
+            // Fill everything if there are no more enemies.
+            return DividerUtils.InterweaveLists(sideA, sideB);
+        }
+        /**/
+
+        if (sideA.Count > sideB.Count)
+        {
+            //ChangeValue(sideB, GridValue.FILLED);
+            fillList.AddRange(sideB);
+        }
+        else if (sideA.Count < sideB.Count)
+        {
+            //ChangeValue(sideB, GridValue.FILLED);
+            fillList.AddRange(sideA);
+        }
+        else
+        {
+            /*
+            if (sideAEnemies > sideBEnemies)
+            {
+                //ChangeValue(sideB, GridValue.FILLED);
+                fillList.AddRange(sideB);
+            }
+            else if (sideAEnemies < sideBEnemies)
+            {
+                //ChangeValue(sideA, GridValue.FILLED);
+                fillList.AddRange(sideA);
+            }
+            else
+            {
+                
+            }
+            /**/
+
+            // If everything is still equal, randomize.
+            fillList.AddRange(Random.Range(0, 2) == 0 ? sideA : sideB);
+        }
+
+        return fillList;
+    }
+    /*
+    private void Fill(List<Vector3> contactPoints)
+    {
+        int length = contactPoints.Count;
+
+        Vector2[] gridCoords = new Vector2[length];
+        for (int i = 0; i < length; i++)
+        {
+            // Retrieve the grid version of the contact point values.
+            Vector3 pos = contactPoints[i];
+            gridCoords[i] = DividerUtils.UnitToGridPoint(pos.x, pos.y);
+        }
+
+        Vector2 pointA = gridCoords[A];
+        Vector2 pointB = gridCoords[B];
+
+        // Check which axis did not change to determine how to fill (vertically or horizontally).
+
+        // For now, there can only be two points of contact.
+        bool horizontal = pointA.y - pointB.y == 0;
+
+        if (horizontal)
+        {
+            FillHorizontal(pointA, pointB);
+        }
+        else
+        {
+            FillVertical(pointA, pointB);
+        }
+    }
+
+    private void FillHorizontal(Vector2 pointA, Vector2 pointB)
+    {
+
+        LineGenerator.GenerateLine(
+            DividerUtils.GridToUnitPoint((int)pointA.x, (int)pointA.y),
+            DividerUtils.GridToUnitPoint((int)pointB.x, (int)pointB.y)
+            );
+        //).transform.parent = lineContainer.transform;
+        // Fill the line along the y-axis.
+        for (int x = (int)pointA.x; x <= (int)pointB.x; x++)
+        {
+            field[x, (int)pointA.y] = GridValue.CRAWL;
+            ChangeMask(x, (int)pointA.y);
+        }
+
+        List<Vector2> down = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, -1));
+        List<Vector2> up = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, 1));
+
+        ProcessFill(down, up);
+        //DividerUtils.PrintField(field);
+    }
+
+    private void FillVertical(Vector2 pointA, Vector2 pointB)
+    {
+
+        LineGenerator.GenerateLine(
+            DividerUtils.GridToUnitPoint((int)pointB.x, (int)pointB.y),
+            DividerUtils.GridToUnitPoint((int)pointA.x, (int)pointA.y)
+            );
+        //).transform.parent = lineContainer.transform;
+        for (int y = (int)pointB.y; y <= (int)pointA.y; y++)
+        {
+            field[(int)pointA.x, y] = GridValue.CRAWL;
+            ChangeMask((int)pointA.x, y);
+        }
+
+        List<Vector2> left = DividerUtils.ProcessField(field, pointB, pointA, new Vector2(-1, 1));
+        List<Vector2> right = DividerUtils.ProcessField(field, pointB, pointA, new Vector2(1, 1));
+
+        ProcessFill(left, right);
+        //DividerUtils.PrintField(field);
+    }
+    /**/
 }

@@ -136,13 +136,26 @@ public class DivisionSource : MonoBehaviour
 
         // Set the status.
         active = false;
+        complete = false;
 
         Destroy(lineRenderer.gameObject);
         Destroy(targetTransform.gameObject);
     }
 
+    /**
+     * Check if the source is complete.
+     */
     public bool IsComplete()
     {
         return complete;
+    }
+
+    /**
+     * Get the last position marked, should only be used
+     * when the target has stopped.
+     */
+    public Vector3 GetTargetLastPosition()
+    {
+        return lastPosition;
     }
 }

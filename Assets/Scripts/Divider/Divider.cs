@@ -32,6 +32,9 @@ public class Divider : MonoBehaviour
     // A switch for when the line is complete.
     private bool lineComplete = false;
 
+    // The status for whether the divided area is being filled.
+    private bool filling = false;
+
     /**
      * Initialize the things needed by this Divider.
      */
@@ -66,6 +69,27 @@ public class Divider : MonoBehaviour
      */
     void FixedUpdate()
     {
+        ProcessDivide();
+        ProcessFill();
+    }
+
+    /**
+     * Process the fill mechanism
+     */
+    private void ProcessFill()
+    {
+        if (!filling)
+        {
+            // Return right away if a fill is not in progress.
+            return;
+        }
+    }
+
+    /**
+     * Process the ongoing divide mechanism.
+     */
+    private void ProcessDivide()
+    {
         if (!dividing)
         {
             // Do not check for anything when not dividing.
@@ -76,6 +100,7 @@ public class Divider : MonoBehaviour
         {
             // Line complete!
             Debug.Log("Line Complete!");
+            CreateLine();
             lineComplete = true;
 
             // Deactivate all sources.
@@ -83,6 +108,20 @@ public class Divider : MonoBehaviour
 
             // But do not cancel the division just yet.
         }
+    }
+
+    /**
+     * Create a line. Retrieve the line points from the sources.
+     */
+    private void CreateLine()
+    {
+        List<Vector3> contactPoints = new List<Vector3>();
+        foreach (DivisionSource source in divisionSources)
+        {
+            contactPoints.Add(source.GetTargetLastPosition());
+        }
+
+        GridController.CreateLine(contactPoints);
     }
 
     /**

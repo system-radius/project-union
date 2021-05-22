@@ -65,6 +65,18 @@ public class DividerUtils : MonoBehaviour
         Debug.Log(s);
     }
 
+    public static void PrintContactPoints(List<Vector3> contactPoints)
+    {
+        string text = "";
+
+        foreach (Vector2 contact in contactPoints)
+        {
+            text += " " + contact;
+        }
+
+        Debug.Log(text);
+    }
+
     public static Vector2 UnitToExactNormalized(float x, float y)
     {
         Vector2 exactCoords = UnitToExact(x, y);
@@ -280,5 +292,46 @@ public class DividerUtils : MonoBehaviour
         }
 
         return frontier;
+    }
+
+    public static List<Vector2> InterweaveLists(List<Vector2> listA, List<Vector2> listB, int weave = 2)
+    {
+        List<Vector2> weavedList = new List<Vector2>();
+
+        bool other = false;
+        int weaveCounter = 0;
+        while (listA.Count > 0 || listB.Count > 0)
+        {
+            if (other)
+            {
+                if (listB.Count == 0)
+                {
+                    other = !other;
+                    continue;
+                }
+                weavedList.Add(listB[0]);
+                listB.RemoveAt(0);
+            }
+            else
+            {
+                if (listA.Count == 0)
+                {
+                    other = !other;
+                    continue;
+                }
+                weavedList.Add(listA[0]);
+                listA.RemoveAt(0);
+            }
+
+            if (weaveCounter + 1 == weave)
+            {
+                weaveCounter = 0;
+                other = !other;
+            }
+
+            weaveCounter++;
+        }
+
+        return weavedList;
     }
 }
