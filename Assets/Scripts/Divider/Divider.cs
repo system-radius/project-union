@@ -14,6 +14,7 @@ public class Divider : MonoBehaviour
 
     // An array of the divide sources, responsible for
     // producing a bullet which will mark the point of contact.
+    private DivisionSource[] divisionSources = new DivisionSource[SIDES];
 
     // The collider tied to the game object.
     // This will be activated when the divide is in progress.
@@ -41,6 +42,88 @@ public class Divider : MonoBehaviour
 
         // Retrieve the collider component.
         capsuleCollider = GetComponent<CapsuleCollider2D>();
+
+        int divideCounter = 0;
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Divide Source") && divideCounter < divisionSources.Length)
+            {
+                divisionSources[divideCounter] = child.gameObject.GetComponent<DivisionSource>();
+                divideCounter++;
+            }
+
+            // Check if the division source array have been filled.
+            if (divideCounter >= divisionSources.Length)
+            {
+                // exit from the loop if they are.
+                break;
+            }
+        }
+    }
+
+    /**
+     * Continuously poll for the status of the sources when dividing.
+     */
+    void FixedUpdate()
+    {
+        if (!dividing)
+        {
+            // Do not check for anything when not dividing.
+            return;
+        }
+
+        if (IsSourcesComplete() && !lineComplete)
+        {
+            // Line complete!
+            Debug.Log("Line Complete!");
+            lineComplete = true;
+
+            // Deactivate all sources.
+            DeactivateSources();
+
+            // But do not cancel the division just yet.
+        }
+    }
+
+    /**
+     * Check if all of the sources have completed their bullet shot.
+     */
+    private bool IsSourcesComplete()
+    {
+        bool result = true;
+
+        foreach (DivisionSource source in divisionSources)
+        {
+            if (source == null) {
+                return false;
+            }
+
+            result = result && source.IsComplete();
+        }
+
+        return result;
+    }
+
+    /**
+     * Call for the sources to be activated.
+     */
+    private void ActivateSources()
+    {
+        foreach (DivisionSource source in divisionSources)
+        {
+            source.Activate();
+        }
+    }
+
+    /**
+     * Call for the sources to be deactivated.
+     */
+    private void DeactivateSources()
+    {
+        foreach (DivisionSource source in divisionSources)
+        {
+            source.Deactivate();
+        }
     }
 
     /**
@@ -58,6 +141,8 @@ public class Divider : MonoBehaviour
 
         dividing = true;
         ResetAnimator();
+
+        ActivateSources();
 
         Debug.Log("Start division!");
     }
@@ -77,6 +162,10 @@ public class Divider : MonoBehaviour
 
         dividing = false;
         ResetAnimator();
+
+        lineComplete = false;
+
+        DeactivateSources();
 
         Debug.Log("Stop division!");
     }

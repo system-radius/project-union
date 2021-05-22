@@ -16,7 +16,7 @@ public class TouchController : MonoBehaviour
     private const float HOLD_CONST = 0.5f;
 
     // The angle to adjust the rotation of the divider.
-    private const float ROTATION_CONST = 90f;
+    private const float ROTATION_CONST = -90f;
 
     // The current amount of time waiting to pass.
     private float touchTime = 0f;

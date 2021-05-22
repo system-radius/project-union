@@ -39,6 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6744834618142028561}
+  - component: {fileID: 8593311416999457690}
   m_Layer: 31
   m_Name: sourceA
   m_TagString: Divide Source
@@ -60,6 +61,22 @@ Transform:
   m_Father: {fileID: 7958453587348471940}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+--- !u!114 &8593311416999457690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138260831529111763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c8d306bc498dbd48a326f037a7171c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
+    type: 3}
+  bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
+    type: 3}
 --- !u!1 &4611149881786729033
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,6 +86,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3181976659932647380}
+  - component: {fileID: 643644660456821495}
   m_Layer: 31
   m_Name: sourceB
   m_TagString: Divide Source
@@ -90,6 +108,22 @@ Transform:
   m_Father: {fileID: 7958453587348471940}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &643644660456821495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611149881786729033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c8d306bc498dbd48a326f037a7171c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
+    type: 3}
+  bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
+    type: 3}
 --- !u!1 &6842776468417156669
 GameObject:
   m_ObjectHideFlags: 0

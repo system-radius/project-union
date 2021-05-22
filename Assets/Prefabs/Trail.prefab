@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6176967141145665416}
   - component: {fileID: 6176967141145665419}
   - component: {fileID: -6424446520985768265}
-  - component: {fileID: 7377460011837416382}
   m_Layer: 0
   m_Name: Trail
   m_TagString: Bullet
@@ -146,17 +145,3 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1}
   m_Direction: 0
---- !u!114 &7377460011837416382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6176967141145665461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79bb4a3e54ee49e4694b86a03ec0d0bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shockPrefab: {fileID: 3756451692839771732, guid: e8c9d5c715959174694ce5d10be83724,
-    type: 3}

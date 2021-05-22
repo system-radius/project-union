@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8070327430874050034}
   - component: {fileID: 8070327430874050035}
-  - component: {fileID: -8753835046091672821}
   - component: {fileID: -4084821374621241603}
   - component: {fileID: 508363633}
-  - component: {fileID: 7379243373906692675}
+  - component: {fileID: 818287175306997907}
   m_Layer: 29
   m_Name: Bullet
   m_TagString: Bullet
@@ -85,21 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-8753835046091672821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8070327430874050044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0640724aef70eca4f95b6b5540080d69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  impactPrefab: {fileID: 7565999084921044073, guid: 09ca4a226b535a34da28bdcbe2e7eec6,
-    type: 3}
-  speed: 15
 --- !u!50 &-4084821374621241603
 Rigidbody2D:
   serializedVersion: 4
@@ -134,32 +118,19 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.14688963}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.20444578
---- !u!61 &7379243373906692675
-BoxCollider2D:
+  m_Radius: 0.2
+--- !u!114 &818287175306997907
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8070327430874050044}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.0025457442, y: -0.1275168}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.56, y: 2.56}
-    newSize: {x: 2.56, y: 2.56}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.42163628, y: 0.42572963}
-  m_EdgeRadius: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca51d1b6f773d34eb98761883d850ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 15
