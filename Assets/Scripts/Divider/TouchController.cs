@@ -30,6 +30,9 @@ public class TouchController : MonoBehaviour
     // The divider class instance. Necessary to call for commands on the divider itself.
     private Divider divideController;
 
+    /**
+     * Initialize the touch controller.
+     */
     void Start()
     {
         // The divider game object needs to have the Divider class as component.
@@ -70,22 +73,13 @@ public class TouchController : MonoBehaviour
         {
             divideController.StopDivide();
         }
-
-
-    }
-
-    void FixedUpdate()
-    {
-        if (Input.touchCount > 0)
-        {
-            touchTime += Input.GetTouch(0).deltaTime;
-        }
     }
 
     private void ProcessTouch(Touch tempTouch)
     {
         // Just take the first touch instance.
         touch = tempTouch;
+        touchTime += Time.deltaTime;
 
         if (CheckHold())
         {
