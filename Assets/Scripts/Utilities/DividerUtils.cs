@@ -96,6 +96,11 @@ public class DividerUtils : MonoBehaviour
         return new Vector2(cX, cY);
     }
 
+    public static Vector2 GridToUnitPoint(float x, float y)
+    {
+        return GridToUnitPoint((int)x, (int)y);
+    }
+
     public static Vector2 GridToUnitPoint(int x, int y)
     {
 

@@ -2,194 +2,110 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * The main class that references how the Divider game object acts.
+ */
 public class Divider : MonoBehaviour
 {
-
-    private GridController gridController;
-
+    // There will always be two sides to the divider:
+    // - one on the top and down (vertical).
+    // - one on left and right (horizontal).
     private const int SIDES = 2;
 
-    // There are only two divide sources.
-    private GameObject[] divideSource = new GameObject[SIDES];
+    // An array of the divide sources, responsible for
+    // producing a bullet which will mark the point of contact.
 
-    private DivideSource[] sources = new DivideSource[SIDES];
-
-    private List<GameObject> bullets;
-
+    // The collider tied to the game object.
+    // This will be activated when the divide is in progress.
+    // Probably best to have the collider always active.
+    // The change is that the divider will not be affected
+    // by enemies if the divide is not in progress.
     private CapsuleCollider2D capsuleCollider;
 
+    // The animator to be used for changing the appearance of the divider.
     private Animator animator;
 
+    // The status for whether the divide is in progress.
     private bool dividing = false;
 
+    // A switch for when the line is complete.
     private bool lineComplete = false;
 
+    /**
+     * Initialize the things needed by this Divider.
+     */
     void Start()
     {
-        bullets = new List<GameObject>();
+        // Retrieve the animator component.
         animator = GetComponent<Animator>();
 
+        // Retrieve the collider component.
         capsuleCollider = GetComponent<CapsuleCollider2D>();
-        capsuleCollider.enabled = false;
-
-        GameObject gridContainer = GameObject.FindGameObjectWithTag("GridController");
-        gridController = gridContainer.GetComponent<GridController>();
-
-        int divideCounter = 0;
-        foreach (Transform child in transform)
-        {
-            if (child.tag == "Divide Source" && divideCounter < divideSource.Length)
-            {
-                divideSource[divideCounter] = child.gameObject;
-                sources[divideCounter] = child.gameObject.GetComponent<DivideSource>();
-                divideCounter++;
-            }
-
-            // Check if the two arrays have been filled.
-            if (divideCounter >= divideSource.Length)
-            {
-                // exit from the loop if they are.
-                break;
-            }
-        }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-
-        if (!dividing)
-        {
-            // Nothing to do here if there is no divide in progress.
-            return;
-        }
-
-        if (gameObject == null)
-        {
-            // If the current touch is lifted, the divide is stopped.
-            StopDivide();
-            return;
-        }
-
-        // Do everything that needs to be done while dividing here.
-        if (HasAllHit() && !lineComplete)
-        {
-            // While the division is in effect, both bullets becoming null
-            // means that both have hit a collider.
-            Debug.Log("Line created!");
-            lineComplete = true;
-            CreateLine();
-            DeactivateSources();
-        }
-    }
-
-    private void CreateLine()
-    {
-
-        // Get the bullets from the source.
-        foreach (DivideSource source in sources)
-        {
-            bullets.Add(source.GetBullet());
-        }
-
-        gridController.CreateLine(bullets);
-        CompleteSources();
-        /*
-        foreach (GameObject bullet in bullets)
-        {
-            // Remove parent.
-            bullet.transform.parent = null;
-        }
-        /**/
-    }
-
-    private bool HasAllHit()
-    {
-        bool result = true;
-
-        for (int i = 0; i < SIDES; i++)
-        {
-            // Check the bullets from the source.
-            if (sources[i] == null)
-            {
-                // Return false right away if a script is not available.
-                return false;
-            }
-
-            result = result && sources[i].HasHit();
-        }
-
-        return result;
     }
 
     /**
-     * Stop the dividing state.
-     */
-    public void StopDivide()
-    {
-        dividing = false;
-        capsuleCollider.enabled = false;
-
-        ResetAnimator();
-        DeactivateSources();
-
-        lineComplete = false;
-    }
-
-    private void DeactivateSources()
-    {
-        Debug.Log("Deactivated sources!");
-        for (int i = 0; i < SIDES; i++)
-        {
-            sources[i].Deactivate();
-        }
-    }
-
-    private void CompleteSources()
-    {
-        Debug.Log("Completed sources!");
-        for (int i = 0; i < SIDES; i++)
-        {
-            sources[i].Complete();
-        }
-    }
-
-    /**
-     * Initialize the dividing state.
+     * Start the dividing process.
+     * This method will activate the divide sources, and the sources
+     * will take care of the processing themselves.
      */
     public void Divide()
     {
         if (dividing)
         {
-            // Do not re-initialize if already dividing.
+            // There is no need to get dividing set up all over again.
             return;
         }
 
-        bullets.Clear();
         dividing = true;
-        capsuleCollider.enabled = true;
+        Debug.Log("Start division!");
+    }
 
-        ResetAnimator();
-
-        for (int i = 0; i < SIDES; i++)
+    /**
+     * Stop the division process. This is called when the divider
+     * instance has either completed the division (both sides have
+     * hit the end points), or if the divider instance is destroyed.
+     */
+    public void StopDivide()
+    {
+        if (!dividing)
         {
-            // Activate the script for the divide source.
-            sources[i].Activate();
+            // If there is no divide in progress, return right away.
+            return;
         }
+
+        dividing = false;
+        Debug.Log("Stop division!");
     }
 
-    public void ResetAnimator()
+    /**
+     * Move the divider to the position as indicated.
+     */
+    public void Move(Vector3 position)
     {
-        animator.SetBool("Dividing", dividing);
+        // Turn the current vector 3 to the "exact" coordinates as permitted by the grid.
+        Vector2 gridCoords = DividerUtils.UnitToGridPoint(position.x, position.y);
+
+        if ((gridCoords.x < 0 || gridCoords.x > DividerUtils.SIZE_X + 1)
+            || (gridCoords.y < 0 || gridCoords.y > DividerUtils.SIZE_Y + 1)) {
+            // Return right away if the coordinates are outside the playing field.
+            return;
+        }
+        position = DividerUtils.GridToUnitPoint(gridCoords.x, gridCoords.y);
+
+        // Always set the Z-coordinate to 0.
+        position.z = 0f;
+
+        transform.position = position;
     }
 
-    public bool IsDividing()
+    /**
+     * Check if the current position of the divider will allow for divide.
+     */
+    public bool IsAllowedDivide()
     {
-        return dividing;
-    }
+        float x = transform.position.x;
+        float y = transform.position.y;
 
-    public int GetBulletCount()
-    {
-        return bullets.Count;
+        return DividerUtils.GetGridValue(GridController.GetField(), x, y) == GridValue.SPACE;
     }
 }

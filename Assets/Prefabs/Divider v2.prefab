@@ -39,7 +39,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6744834618142028561}
-  - component: {fileID: 4049764519526106845}
   m_Layer: 31
   m_Name: sourceB
   m_TagString: Divide Source
@@ -61,25 +60,6 @@ Transform:
   m_Father: {fileID: 7958453587348471940}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
---- !u!114 &4049764519526106845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2138260831529111763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62b68596849e43f49a8b8c1205ed2f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
-    type: 3}
-  bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
-    type: 3}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 1610612736
 --- !u!1 &4611149881786729033
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +69,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3181976659932647380}
-  - component: {fileID: 4188436604047843585}
   m_Layer: 31
   m_Name: sourceA
   m_TagString: Divide Source
@@ -111,25 +90,6 @@ Transform:
   m_Father: {fileID: 7958453587348471940}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4188436604047843585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4611149881786729033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62b68596849e43f49a8b8c1205ed2f56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trailPrefab: {fileID: 6176967141145665461, guid: 2d17b6959b3db484d98ce9aca4dc0044,
-    type: 3}
-  bulletPrefab: {fileID: 8070327430874050044, guid: 6461abdd7c1463149844bf771c1a3ea6,
-    type: 3}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 1610612736
 --- !u!1 &6842776468417156669
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,10 +131,9 @@ GameObject:
   - component: {fileID: 7958453587348471940}
   - component: {fileID: 7958453587348471941}
   - component: {fileID: 2890852562430348339}
-  - component: {fileID: -643139450609809176}
-  - component: {fileID: -5279368738465773511}
   - component: {fileID: 3801378050473502425}
   - component: {fileID: -7539494890706941315}
+  - component: {fileID: 4110639531082601503}
   m_Layer: 31
   m_Name: Divider v2
   m_TagString: Player
@@ -263,30 +222,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58490fd393af3a447821081890d0e2db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-643139450609809176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7958453587348471938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ede07ac80a20a9c40be2a6cc6149c979, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-5279368738465773511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7958453587348471938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e8285b240c9af4408867cceb5f75649, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!70 &3801378050473502425
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -294,14 +229,14 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7958453587348471938}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 2.28}
+  m_Size: {x: 0.6, y: 0.9}
   m_Direction: 0
 --- !u!95 &-7539494890706941315
 Animator:
@@ -322,3 +257,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4110639531082601503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7958453587348471938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ede07ac80a20a9c40be2a6cc6149c979, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
