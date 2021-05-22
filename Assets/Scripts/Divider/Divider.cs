@@ -57,6 +57,8 @@ public class Divider : MonoBehaviour
         }
 
         dividing = true;
+        ResetAnimator();
+
         Debug.Log("Start division!");
     }
 
@@ -74,6 +76,8 @@ public class Divider : MonoBehaviour
         }
 
         dividing = false;
+        ResetAnimator();
+
         Debug.Log("Stop division!");
     }
 
@@ -99,6 +103,14 @@ public class Divider : MonoBehaviour
     }
 
     /**
+     * Change the current form of animation based on the dividing status.
+     */
+    public void ResetAnimator()
+    {
+        animator.SetBool("Dividing", dividing);
+    }
+
+    /**
      * Check if the current position of the divider will allow for divide.
      */
     public bool IsAllowedDivide()
@@ -107,5 +119,13 @@ public class Divider : MonoBehaviour
         float y = transform.position.y;
 
         return DividerUtils.GetGridValue(GridController.GetField(), x, y) == GridValue.SPACE;
+    }
+
+    /**
+     * Check if a division is in progress.
+     */
+    public bool IsDividing()
+    {
+        return dividing;
     }
 }
