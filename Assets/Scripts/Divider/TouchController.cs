@@ -2,29 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * This class is supposed to handle all of the inputs to control
+ * the divider. This class should only send commands to the divider
+ * and the divider will act on those commands. The controller
+ * will not act directly on behalf of the divider. This means
+ * that all checks are to be accomplished in the divider class itself.
+ */
 public class TouchController : MonoBehaviour
 {
 
     // The amount of time to pass before the touch is considered as "hold."
     private const float HOLD_CONST = 0.5f;
 
-    private const float ROTATION_CONST = 90f;
+    // The angle to adjust the rotation of the divider.
+    private const float ROTATION_CONST = -90f;
 
     // The current amount of time waiting to pass.
     private float touchTime = 0f;
 
+    // The state of the divider, whether it is horizontal (true) or vertical (false).
     private bool horizontal;
 
+    // The current touch object.
     private Touch touch;
 
-    private GridController gridController;
-
+    // The divider class instance. Necessary to call for commands on the divider itself.
     private Divider divideController;
 
+    /**
+     * Initialize the touch controller.
+     */
     void Start()
     {
-        GameObject gridContainer = GameObject.FindGameObjectWithTag("GridController");
-        gridController = gridContainer.GetComponent<GridController>();
+        // The divider game object needs to have the Divider class as component.
         divideController = GetComponent<Divider>();
     }
 
@@ -52,8 +63,7 @@ public class TouchController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (DividerUtils.GetGridValue(
-                gridController.GetField(), transform.position.x, transform.position.y) == GridValue.SPACE)
+            if (divideController.IsAllowedDivide())
             {
                 touch.phase = TouchPhase.Stationary;
                 divideController.Divide();
@@ -61,22 +71,7 @@ public class TouchController : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.Space))
         {
-            if (divideController.IsDividing())
-            {
-                divideController.StopDivide();
-            }
-        }
-
-
-    }
-
-    void FixedUpdate()
-    {
-        if (Input.touchCount > 0)
-        {
-            // Just take the first touch instance.
-            touch = Input.GetTouch(0);
-            touchTime += touch.deltaTime;
+            divideController.StopDivide();
         }
     }
 
@@ -84,6 +79,7 @@ public class TouchController : MonoBehaviour
     {
         // Just take the first touch instance.
         touch = tempTouch;
+        touchTime += Time.deltaTime;
 
         if (CheckHold())
         {
@@ -108,10 +104,7 @@ public class TouchController : MonoBehaviour
 
         if (touch.phase.Equals(TouchPhase.Ended))
         {
-            if (divideController.IsDividing())
-            {
-                divideController.StopDivide();
-            }
+            divideController.StopDivide();
             touchTime = 0;
         }
     }
@@ -120,33 +113,12 @@ public class TouchController : MonoBehaviour
     {
         // Convert the touch position from screen to world coordinates.
         Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-
-        // Do not consider changes along the z-axis.
-        touchPos.z = 0;
-
-        if (DividerUtils.GetGridValue(gridController.GetField(), touchPos.x, touchPos.y) != GridValue.SPACE)
-        {
-            // Return prematurely.
-            return;
-        }
-
-        Vector2 exactCoords = DividerUtils.UnitToExactNormalized(touchPos.x, touchPos.y);
-        touchPos.x = exactCoords.x;
-        touchPos.y = exactCoords.y;
-
-        Vector2 gridCoords = DividerUtils.UnitToGridPoint(touchPos.x, touchPos.y);
-
-        //Debug.Log("(" + touchPos.x + ", " + touchPos.y + ") = [" + gridCoords.x + ", " + gridCoords.y + "]");
-        // Set the transform of this object to the position of the touch.
-        transform.position = touchPos;
+        divideController.Move(touchPos);
     }
 
     bool CheckHold()
     {
-
-        return touchTime >= HOLD_CONST && DividerUtils.GetGridValue(
-            gridController.GetField(), transform.position.x, transform.position.y
-            ) == GridValue.SPACE;
+        return touchTime >= HOLD_CONST && divideController.IsAllowedDivide();
     }
 
     void Rotate()
