@@ -227,16 +227,14 @@ public class GridController
     {
         List<Vector2> fillList = new List<Vector2>();
 
-        //int sideAEnemies = EnemyManager.CountOnPosition(sideA);
-        //int sideBEnemies = EnemyManager.CountOnPosition(sideB);
+        int sideAEnemies = EnemyManager.CountOnPosition(sideA);
+        int sideBEnemies = EnemyManager.CountOnPosition(sideB);
 
-        /*
         if (sideAEnemies == 0 && sideBEnemies == 0)
         {
             // Fill everything if there are no more enemies.
             return DividerUtils.InterweaveLists(sideA, sideB);
         }
-        /**/
 
         if (sideA.Count > sideB.Count)
         {
@@ -250,7 +248,6 @@ public class GridController
         }
         else
         {
-            /*
             if (sideAEnemies > sideBEnemies)
             {
                 //ChangeValue(sideB, GridValue.FILLED);
@@ -263,12 +260,9 @@ public class GridController
             }
             else
             {
-                
+                // If everything is still equal, randomize.
+                fillList.AddRange(Random.Range(0, 2) == 0 ? sideA : sideB);
             }
-            /**/
-
-            // If everything is still equal, randomize.
-            fillList.AddRange(Random.Range(0, 2) == 0 ? sideA : sideB);
         }
 
         return fillList;
@@ -347,4 +341,4 @@ public class GridController
         //DividerUtils.PrintField(field);
     }
     /**/
-}
+        }

@@ -104,4 +104,26 @@ public class EnemyManager
         DestroyEnemies();
         CreateEnemies();
     }
+
+    public static int GetEnemyCount()
+    {
+        return instance.enemyContainer.transform.childCount;
+    }
+
+    public static int CountOnPosition(List<Vector2> coords)
+    {
+        int count = 0;
+
+        foreach (Transform enemy in instance.enemyContainer.transform)
+        {
+            float x = enemy.transform.position.x;
+            float y = enemy.transform.position.y;
+
+            count += coords.Contains(DividerUtils.UnitToGridPoint(x, y)) ? 1 : 0;
+        }
+
+        Debug.Log("Count on pos: " + count);
+
+        return count;
+    }
 }
