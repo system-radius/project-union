@@ -1407,7 +1407,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e913ef04eae5914282af66a89c71848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelPrefabs:
+  - {fileID: 8106331104716222628, guid: c7884ac1c6a1f094da4d56f7bd11a2dd, type: 3}
+  - {fileID: 7349609537285894512, guid: 62d6d0de416620643850e7097694dd84, type: 3}
+  - {fileID: 2197219563507459143, guid: 16bc6a28fd593a04496dac744383ba4a, type: 3}
+  - {fileID: 63308574442977127, guid: 736b3374eea52ca4785eeafb01a38785, type: 3}
+  - {fileID: 298291906575791425, guid: e4e2a88ce143b2f4ba97b50f02554237, type: 3}
+  - {fileID: 7809809998484198288, guid: cb62b6034dc24f445af26560d51d4836, type: 3}
   dividerPrefab: {fileID: 7958453587348471938, guid: c97f05a5f312a344099e7ce708e51b7b,
+    type: 3}
+  maskPrefab: {fileID: 8940478367869546973, guid: 008d57e4ad22da74fa7a1ffcb93977e3,
     type: 3}
 --- !u!4 &1934345339
 Transform:

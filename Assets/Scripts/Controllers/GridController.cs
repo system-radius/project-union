@@ -31,6 +31,11 @@ public class GridController
     public static void StaticReset()
     {
         instance.ResetField();
+
+        if (instance.fillableSpaces < 0)
+        {
+            instance.fillableSpaces = instance.CountFillableSpaces();
+        }
     }
 
     /**
@@ -46,6 +51,8 @@ public class GridController
 
     /**
      * Change the value for the current grid point provided.
+     * When updating the value for the field, the corresponding
+     * mask is also updated. The mask is handled by the game controller.
      */
     public static void UpdateFieldValue(Vector2 gridPoint, GridValue value, bool forced = false)
     {
@@ -76,12 +83,27 @@ public class GridController
         //instance.Fill(contactPoints);
     }
 
+    /**
+     * Compute the fill percentage for the current playing field.
+     */
+    public static float ComputeFillPercent()
+    {
+        // Retrieve the current count of fillable space.
+        float newCount = instance.CountFillableSpaces();
+
+        // Compute the percentage [0 - 1].
+        return 1 - (newCount / instance.fillableSpaces);
+    }
+
     private const int A = 0;
 
     private const int B = 1;
 
     // The main focus in this class. The storage for all values in the field.
     private GridValue[,] field;
+
+    // The amount of spaces available to be filled.
+    private float fillableSpaces;
 
     /**
      * On create, initialize everything.
@@ -106,6 +128,28 @@ public class GridController
                 field[x, y] = GridValue.SPACE;
             }
         }
+
+        // Set the value of the fillable spaces to a negative value.
+        // This will force for a recomputation of the fillable spaces.
+        fillableSpaces = -1;
+    }
+
+    /**
+     * Count all of the spaces that can be filled om a brute force manner.
+     */
+    private float CountFillableSpaces()
+    {
+        float result = 0f;
+
+        for (int x = 0; x <= DividerUtils.SIZE_X; x++)
+        {
+            for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
+            {
+                result += field[x, y] == GridValue.SPACE ? 1f : 0f;
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -125,6 +169,11 @@ public class GridController
         // Retrieve the points from the grid coords list.
         Vector2 pointA = gridCoords[A];
         Vector2 pointB = gridCoords[B];
+
+        LineGenerator.GenerateLine(
+            DividerUtils.GridToUnitPoint((int)pointA.x, (int)pointA.y),
+            DividerUtils.GridToUnitPoint((int)pointB.x, (int)pointB.y)
+            );
 
         bool horizontal = pointA.y - pointB.y == 0;
         if (horizontal)
@@ -161,7 +210,7 @@ public class GridController
     {
         List<Vector2> result = new List<Vector2>();
 
-        for (int y = (int)pointB.y; y <= (int)pointA.y; y++)
+        for (int y = (int)pointA.y; y <= (int)pointB.y; y++)
         {
             field[(int)pointA.x, y] = GridValue.CRAWL;
         }

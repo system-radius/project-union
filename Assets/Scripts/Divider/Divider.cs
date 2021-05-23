@@ -4,6 +4,8 @@ using UnityEngine;
 
 /**
  * The main class that references how the Divider game object acts.
+ * This class is only responsible for retrieving the area that will
+ * be filled. The actual filling is to be handled by another controller.
  */
 public class Divider : MonoBehaviour
 {
@@ -31,9 +33,6 @@ public class Divider : MonoBehaviour
 
     // A switch for when the line is complete.
     private bool lineComplete = false;
-
-    // The status for whether the divided area is being filled.
-    private bool filling = false;
 
     /**
      * Initialize the things needed by this Divider.
@@ -70,19 +69,6 @@ public class Divider : MonoBehaviour
     void FixedUpdate()
     {
         ProcessDivide();
-        ProcessFill();
-    }
-
-    /**
-     * Process the fill mechanism
-     */
-    private void ProcessFill()
-    {
-        if (!filling)
-        {
-            // Return right away if a fill is not in progress.
-            return;
-        }
     }
 
     /**
@@ -121,7 +107,8 @@ public class Divider : MonoBehaviour
             contactPoints.Add(source.GetTargetLastPosition());
         }
 
-        GridController.CreateLine(contactPoints);
+        // Add all of the retrieved coords to the game controller.
+        GameController.AddFillCoords(GridController.CreateLine(contactPoints));
     }
 
     /**

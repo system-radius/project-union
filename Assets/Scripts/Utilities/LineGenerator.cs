@@ -8,7 +8,7 @@ public class LineGenerator : MonoBehaviour
     public static GameObject GenerateLine(Vector3 pointA, Vector3 pointB)
     {
         LineRenderer line = new GameObject("Line").AddComponent<LineRenderer>();
-        line.material = new Material(Shader.Find("Diffuse"));
+        //line.material = new Material(Shader.Find("Diffuse"));
         CreatePoint(pointA).transform.parent = line.transform;
         CreatePoint(pointB).transform.parent = line.transform;
 
@@ -21,11 +21,11 @@ public class LineGenerator : MonoBehaviour
         line.SetPosition(1, pointB);
 
         // Set the starting properties.
-        line.startWidth = 1f;
+        line.startWidth = 0.5f;
         line.startColor = Color.black;
 
         // Set the ending properties.
-        line.endWidth = 1f;
+        line.endWidth = 0.5f;
         line.endColor = Color.black;
 
         // Use the world space.
