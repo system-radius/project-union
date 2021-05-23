@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8227475137983917164}
   - component: {fileID: 7941893648282513779}
   - component: {fileID: 3488165878697505531}
-  m_Layer: 0
+  m_Layer: 30
   m_Name: Mask
   m_TagString: EnemyKiller
   m_Icon: {fileID: 0}

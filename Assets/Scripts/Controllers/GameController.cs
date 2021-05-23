@@ -55,6 +55,9 @@ public class GameController : MonoBehaviour
     // The array that contains all of the levels to be displayed.
     public GameObject[] levelPrefabs;
 
+    // The array of enemy prefabrications to be spawned.
+    public GameObject[] enemyPrefabs;
+
     // The prefabrication to be spawned as the divider instance.
     public GameObject dividerPrefab;
 
@@ -113,6 +116,9 @@ public class GameController : MonoBehaviour
 
         // Create an instnace for the grid controller.
         GridController.CreateInstance();
+
+        // Create an instance for the enemy manager.
+        EnemyManager.CreateInstance(enemyPrefabs);
 
         // Create the list container.
         fillCoords = new List<Vector2>();
@@ -180,6 +186,8 @@ public class GameController : MonoBehaviour
 
         // Reset the completion status.
         levelComplete = false;
+
+        EnemyManager.ResetEnemies(currentLevel);
 
         if (lineGen == null) {
             // Create the line generator. There should only be one instance at any point.

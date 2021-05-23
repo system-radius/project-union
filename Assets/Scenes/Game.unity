@@ -1384,6 +1384,9 @@ MonoBehaviour:
   - {fileID: 63308574442977127, guid: 736b3374eea52ca4785eeafb01a38785, type: 3}
   - {fileID: 298291906575791425, guid: e4e2a88ce143b2f4ba97b50f02554237, type: 3}
   - {fileID: 7809809998484198288, guid: cb62b6034dc24f445af26560d51d4836, type: 3}
+  enemyPrefabs:
+  - {fileID: 5493285609152237057, guid: 0a6eb9568d3a2f148b26429028c6f900, type: 3}
+  - {fileID: 2126686332469529442, guid: 3c7312f8f4010cd459fbd5f46d0fd4ce, type: 3}
   dividerPrefab: {fileID: 7958453587348471938, guid: c97f05a5f312a344099e7ce708e51b7b,
     type: 3}
   maskPrefab: {fileID: 8940478367869546973, guid: 008d57e4ad22da74fa7a1ffcb93977e3,
