@@ -32,8 +32,9 @@ public class PlayerCollider : MonoBehaviour
 
     private void KillPlayer()
     {
-        if (!divider.IsDividing())
+        if (divider == null || !divider.IsDividing())
         {
+            // Ignore the collision if the divider is not enabled.
             // The player can only be killed while dividing.
             return;
         }

@@ -27,14 +27,6 @@ public class Divider : MonoBehaviour
     // A switch for when the line is complete.
     private bool lineComplete = false;
 
-    void Awake()
-    {
-        // Add the player collider to the game object.
-        // This will ensure that the Divider class is already created
-        // by the time that the player collider attempted to retrieve it.
-        gameObject.AddComponent<PlayerCollider>();
-    }
-
     /**
      * Initialize the things needed by this Divider.
      */
@@ -42,6 +34,11 @@ public class Divider : MonoBehaviour
     {
         // Retrieve the animator component.
         animator = GetComponent<Animator>();
+
+        // Add the player collider to the game object.
+        // This will ensure that the Divider class is already created
+        // by the time that the player collider attempted to retrieve it.
+        gameObject.AddComponent<PlayerCollider>();
 
         int divideCounter = 0;
         foreach (Transform child in transform)

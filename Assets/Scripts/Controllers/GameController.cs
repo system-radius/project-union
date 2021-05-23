@@ -155,12 +155,21 @@ public class GameController : MonoBehaviour
 
         if (divider == null)
         {
+            // Begin counting towards the respawn of the player.
             respawnTimer += Time.deltaTime;
+
+            // If the time has exceeded the specified limit,
             if (respawnTimer >= SPAWN_TIME_LIMIT)
             {
+                // Spawn the player.
                 respawnTimer = 0f;
                 SpawnDivider();
             }
+        }
+        else
+        {
+            // Always resset the respawn timer to 0 otherwise.
+            respawnTimer = 0f;
         }
 
         ProcessFill();
