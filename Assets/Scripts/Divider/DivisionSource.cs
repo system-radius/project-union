@@ -51,9 +51,18 @@ public class DivisionSource : MonoBehaviour
      */
     void FixedUpdate()
     {
-        if (!active)
+        if (!active || complete)
         {
             // Return right away if the division source is not active.
+            return;
+        }
+
+        if ((targetTransform == null || lastPosition == targetTransform.position))
+        {
+            // If the current bullet has not hit anything yet,
+            // and the last known position and the current target's position
+            // are the same, then mark this source as complete.
+            complete = true;
             return;
         }
 
@@ -61,14 +70,6 @@ public class DivisionSource : MonoBehaviour
 
         lineCollider.size = new Vector2(0.5f, (targetTransform.position - transform.position).magnitude);
         lineCollider.transform.position = transform.position + (targetTransform.position - transform.position) / 2;
-
-        if (!complete && lastPosition == targetTransform.position)
-        {
-            // If the current bullet has not hit anything yet,
-            // and the last known position and the current target's position
-            // are the same, then mark this source as complete.
-            complete = true;
-        }
 
         // Record the last known position.
         lastPosition = targetTransform.position;
@@ -139,7 +140,11 @@ public class DivisionSource : MonoBehaviour
         complete = false;
 
         Destroy(lineRenderer.gameObject);
-        Destroy(targetTransform.gameObject);
+
+        if (targetTransform != null)
+        {
+            Destroy(targetTransform.gameObject);
+        }
     }
 
     /**

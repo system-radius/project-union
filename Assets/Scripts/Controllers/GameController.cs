@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour
 
     private static float UNMASK_RATE = 1.25f;
 
+    private static float TRANSITION_LIMIT = 2f;
+
     /**
      * Allows for the retrieval of the held instance, statically.
      */
@@ -59,11 +61,20 @@ public class GameController : MonoBehaviour
     // The masking prefabrication for the puzzle picture.
     public GameObject maskPrefab;
 
+    // The prefab for the line generator object.
+    public GameObject lineGenPrefab;
+
     // A created instance at runtime. This represents the player in the game.
     private GameObject divider;
 
     // The current image for the level.
     private GameObject levelImage;
+    
+    // A reference to the line generator object.
+    private GameObject lineGen;
+
+    // The array of game objects that has the "Finish" tag.
+    private GameObject[] completionObjects;
 
     // The 2D array of the masking objects.
     private GameObject[,] masks;
@@ -78,8 +89,18 @@ public class GameController : MonoBehaviour
     // The current fill percentage that has been accomplished.
     private float fillPercent = 0f;
 
+    // The current time since the transition has started.
+    private float transitionTimer = 0f;
+
     // The current level.
     private int currentLevel = -1;
+
+    // Status for whether the transition has begun.
+    private bool transitionStart = false;
+
+    // Indicates the completion of the level.
+    // Will be true if the finishing UI are set to active.
+    private bool levelComplete = false;
 
     /**
      * On awake, initialize all that is needed. All other controllers and such.
@@ -99,8 +120,11 @@ public class GameController : MonoBehaviour
         // Create the initial container for the masks.
         masks = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils .SIZE_Y + 1];
 
-        // Reset this instance as a first step.
-        Reset();
+        // Retrieve the continue text game object.
+        completionObjects = GameObject.FindGameObjectsWithTag("Finish");
+
+        // Increase the level as the first step.
+        AdvanceLevel();
     }
 
     /**
@@ -110,8 +134,25 @@ public class GameController : MonoBehaviour
      */
     void FixedUpdate()
     {
+        if (levelComplete)
+        {
+            ProcessComplete();
+
+            // If the level is already recorded as complete, no more processing is required.
+            return;
+        }
+
         ProcessFill();
         ProcessQuota();
+    }
+
+    /**
+     * Increase the current level.
+     */
+    public void AdvanceLevel() {
+
+        currentLevel = currentLevel + 1 >= levelPrefabs.Length ? 0 : currentLevel + 1;
+        Reset();
     }
 
     public void Reset()
@@ -122,13 +163,28 @@ public class GameController : MonoBehaviour
         // Create/reset the masks instances.
         CreateMasks();
 
-        currentLevel = currentLevel + 1 >= levelPrefabs.Length ? 0 : currentLevel + 1;
-
         // Create the level image.
         CreateLevelImage();
 
         // Spawn the divider.
         SpawnDivider();
+
+        // Cancel the display for the UI stuff for the completion of the level.
+        DisplayCompleteLevel(false);
+
+        // Reset the transition timer.
+        transitionTimer = 0f;
+
+        // Reset the transition status.
+        transitionStart = false;
+
+        // Reset the completion status.
+        levelComplete = false;
+
+        if (lineGen == null) {
+            // Create the line generator. There should only be one instance at any point.
+            lineGen = Instantiate(lineGenPrefab);
+        }
     }
 
     /**
@@ -230,11 +286,54 @@ public class GameController : MonoBehaviour
      */
     private void ProcessQuota()
     {
-        // If the current fill percent has reached or exceeded the fill quota
-        if (fillPercent >= DividerUtils.FILL_QUOTA)
+        // If the transition has not yet started and if the current
+        // fill percent has reached or exceeded the fill quota
+        if (!transitionStart && fillPercent >= DividerUtils.FILL_QUOTA)
         {
             // Display the full image.
             DisplayFullImage();
+            transitionStart = true;
+        }
+
+        // If the transition is in progress
+        if (transitionStart)
+        {
+            // Add to the transition timer.
+            transitionTimer += Time.deltaTime;
+            if (transitionTimer >= TRANSITION_LIMIT)
+            {
+                transitionStart = false;
+
+                // Display the completion level objects.
+                DisplayCompleteLevel();
+            }
+        }
+    }
+
+    /**
+     * Function responsible for processing the completion of the level.
+     * Wait for the input from the user, then call to advance the level
+     * and reset.
+     */
+    private void ProcessComplete()
+    {
+        if (Input.touchCount > 0)
+        {
+            if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                AdvanceLevel();
+            }
+        } else if (Input.GetMouseButtonUp(0)) {
+            AdvanceLevel();
+        }
+    }
+
+    private void DisplayCompleteLevel(bool display = true)
+    {
+        levelComplete = display;
+        foreach (GameObject gameObject in completionObjects)
+        {
+            gameObject.SetActive(display);
         }
     }
 
@@ -250,5 +349,11 @@ public class GameController : MonoBehaviour
                 masks[x, y].SetActive(true);
             }
         }
+
+        // Reset the fill percentage.
+        fillPercent = 0f;
+
+        // On display of the full image, clear the lines as well.
+        LineGenerator.ClearLines();
     }
 }
