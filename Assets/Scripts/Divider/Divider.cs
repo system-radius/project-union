@@ -18,13 +18,6 @@ public class Divider : MonoBehaviour
     // producing a bullet which will mark the point of contact.
     private DivisionSource[] divisionSources = new DivisionSource[SIDES];
 
-    // The collider tied to the game object.
-    // This will be activated when the divide is in progress.
-    // Probably best to have the collider always active.
-    // The change is that the divider will not be affected
-    // by enemies if the divide is not in progress.
-    private CapsuleCollider2D capsuleCollider;
-
     // The animator to be used for changing the appearance of the divider.
     private Animator animator;
 
@@ -34,6 +27,14 @@ public class Divider : MonoBehaviour
     // A switch for when the line is complete.
     private bool lineComplete = false;
 
+    void Awake()
+    {
+        // Add the player collider to the game object.
+        // This will ensure that the Divider class is already created
+        // by the time that the player collider attempted to retrieve it.
+        gameObject.AddComponent<PlayerCollider>();
+    }
+
     /**
      * Initialize the things needed by this Divider.
      */
@@ -41,9 +42,6 @@ public class Divider : MonoBehaviour
     {
         // Retrieve the animator component.
         animator = GetComponent<Animator>();
-
-        // Retrieve the collider component.
-        capsuleCollider = GetComponent<CapsuleCollider2D>();
 
         int divideCounter = 0;
         foreach (Transform child in transform)

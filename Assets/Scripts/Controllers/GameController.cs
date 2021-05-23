@@ -15,6 +15,8 @@ public class GameController : MonoBehaviour
 
     private static float TRANSITION_LIMIT = 2f;
 
+    private static float SPAWN_TIME_LIMIT = 2f;
+
     /**
      * Allows for the retrieval of the held instance, statically.
      */
@@ -95,6 +97,9 @@ public class GameController : MonoBehaviour
     // The current time since the transition has started.
     private float transitionTimer = 0f;
 
+    // The timer responsible respawning the player.
+    private float respawnTimer = 0f;
+
     // The current level.
     private int currentLevel = -1;
 
@@ -146,6 +151,16 @@ public class GameController : MonoBehaviour
 
             // If the level is already recorded as complete, no more processing is required.
             return;
+        }
+
+        if (divider == null)
+        {
+            respawnTimer += Time.deltaTime;
+            if (respawnTimer >= SPAWN_TIME_LIMIT)
+            {
+                respawnTimer = 0f;
+                SpawnDivider();
+            }
         }
 
         ProcessFill();
@@ -350,6 +365,9 @@ public class GameController : MonoBehaviour
      */
     private void DisplayFullImage()
     {
+        // Remove the divider.
+        Destroy(divider);
+
         for (int x = 0; x <= DividerUtils.SIZE_X; x++)
         {
             for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
