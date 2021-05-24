@@ -16,6 +16,7 @@ TagManager:
   - EnemyKiller
   - PointA
   - PointB
+  - Start
   layers:
   - Default
   - TransparentFX

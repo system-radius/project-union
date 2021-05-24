@@ -31,6 +31,7 @@ public class GridController
     public static void StaticReset()
     {
         instance.ResetField();
+        instance.ResetCrawlSpace();
 
         if (instance.fillableSpaces < 0)
         {
@@ -102,6 +103,8 @@ public class GridController
     // The main focus in this class. The storage for all values in the field.
     private GridValue[,] field;
 
+    private GameObject container;
+
     // The amount of spaces available to be filled.
     private float fillableSpaces;
 
@@ -114,6 +117,8 @@ public class GridController
         
         // Initialize the field.
         field = new GridValue[DividerUtils.SIZE_X + 1, DividerUtils.SIZE_Y + 1];
+
+        container = new GameObject("CrawlPoints");
     }
 
     /**
@@ -126,6 +131,11 @@ public class GridController
             for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
             {
                 field[x, y] = GridValue.SPACE;
+
+                if (x == 0 || y == 0 || x == DividerUtils.SIZE_X || y == DividerUtils.SIZE_Y)
+                {
+                    field[x, y] = GridValue.BOUNDS;
+                }
             }
         }
 
@@ -150,6 +160,51 @@ public class GridController
         }
 
         return result;
+    }
+
+    /**
+     * Reset the state of the crawl spaces.
+     */
+    private void ResetCrawlSpace()
+    {
+        /*
+        // Destroy all of the existing crawl points instances.
+        foreach (Transform crawlPoint in container.transform)
+        {
+            GameObject.Destroy(crawlPoint.gameObject);
+        }
+
+        for (int x = 0; x <= DividerUtils.SIZE_X; x++)
+        {
+            for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
+            {
+                if (field[x, y] == GridValue.CRAWL)
+                {
+                    GameObject crawlPoint = LineGenerator
+                        .CreateCrawlPoint(DividerUtils.GridToUnitPoint(x, y));
+                    crawlPoint.transform.parent = container.transform;
+                }
+            }
+        }
+        /**/
+
+        List<LinePoints> boundingCoords = new List<LinePoints>();
+        for (int x = 0; x <= DividerUtils.SIZE_X; x++)
+        {
+            for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
+            {
+                if (field[x, y] == GridValue.BOUNDS)
+                {
+                    boundingCoords.AddRange(DividerUtils
+                        .FindBoundingCoords(field, new Vector2(x, y)));
+                }
+            }
+        }
+
+        foreach (LinePoints linePoint in boundingCoords)
+        {
+            LineGenerator.GenerateLine(linePoint.GetPointA(), linePoint.GetPointB());
+        }
     }
 
     /**

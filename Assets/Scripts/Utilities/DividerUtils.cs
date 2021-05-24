@@ -108,6 +108,11 @@ public class DividerUtils : MonoBehaviour
         return new Vector2(cX, cY);
     }
 
+    public static Vector2 GridToUnitPoint(Vector2 vector)
+    {
+        return GridToUnitPoint(vector.x, vector.y);
+    }
+
     public static Vector2 GridToUnitPoint(float x, float y)
     {
         return GridToUnitPoint((int)x, (int)y);
@@ -294,6 +299,9 @@ public class DividerUtils : MonoBehaviour
         return frontier;
     }
 
+    /**
+     * Compiles two lists, so that an item from List A is followed by an item in List B.
+     */
     public static List<Vector2> InterweaveLists(List<Vector2> listA, List<Vector2> listB, int weave = 2)
     {
         List<Vector2> weavedList = new List<Vector2>();
@@ -333,5 +341,56 @@ public class DividerUtils : MonoBehaviour
         }
 
         return weavedList;
+    }
+
+    /**
+     * Gets the bounding coordinates from the provided field.
+     */
+    public static List<LinePoints> FindBoundingCoords(GridValue[,] field, Vector2 startCoord)
+    {
+        List<LinePoints> result = new List<LinePoints>();
+
+        // Starting from the provided point, move towards the four cardinal directions.
+        result.AddRange(FindDirectionalBoundingCoords(field, startCoord, new Vector2(1, 0)));
+        result.AddRange(FindDirectionalBoundingCoords(field, startCoord, new Vector2(0, 1)));
+        result.AddRange(FindDirectionalBoundingCoords(field, startCoord, new Vector2(-1, 0)));
+        result.AddRange(FindDirectionalBoundingCoords(field, startCoord, new Vector2(0, -1)));
+
+        return result;
+    }
+
+    public static List<LinePoints> FindDirectionalBoundingCoords(GridValue[,] field, Vector2 startCoord, Vector2 update)
+    {
+        List<LinePoints> result = new List<LinePoints>();
+
+        Vector2 coord = startCoord;
+        Vector2 stepCoord = startCoord + update;
+
+        // Repeat the updates to the coord while the field value is equal to the bound value.
+        while (IsValidCoord(stepCoord) && field[(int)stepCoord.x, (int)stepCoord.y] == GridValue.BOUNDS)
+        {
+            coord = stepCoord;
+            stepCoord += update;
+
+            // Change the field value to crawl.
+            field[(int)coord.x, (int)coord.y] = GridValue.CRAWL;
+        }
+
+        if (coord == startCoord) {
+            // This means that the search has not progressed. Return right away.
+            return result;
+        }
+
+        // If the step coord goes out of bounds, or the value is invalid, then use the last coord.
+        result.Add(new LinePoints(GridToUnitPoint(startCoord), GridToUnitPoint(coord)));
+
+        // Find other bounds, based on the new found coord.
+        result.AddRange(FindBoundingCoords(field, coord));
+
+        return result;
+    }
+
+    private static bool IsValidCoord(Vector2 coord) {
+        return !(coord.x < 0 || coord.y < 0 || coord.x > SIZE_X || coord.y > SIZE_Y);
     }
 }

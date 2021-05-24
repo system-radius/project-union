@@ -74,9 +74,9 @@ public class GameController : MonoBehaviour
 
     // The current image for the level.
     private GameObject levelImage;
-    
-    // A reference to the line generator object.
-    private GameObject lineGen;
+
+    // The array of game objects that has the "Start" tag.
+    private GameObject[] startingObjects;
 
     // The array of game objects that has the "Finish" tag.
     private GameObject[] completionObjects;
@@ -131,11 +131,19 @@ public class GameController : MonoBehaviour
         // Create the initial container for the masks.
         masks = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils .SIZE_Y + 1];
 
-        // Retrieve the continue text game object.
+        // Retrieve the starting objects.
+        startingObjects = GameObject.FindGameObjectsWithTag("Start");
+
+        // Retrieve the completion game objects.
         completionObjects = GameObject.FindGameObjectsWithTag("Finish");
 
-        // Increase the level as the first step.
-        AdvanceLevel();
+        // Create the line generator. There should only be one instance at any point.
+        Instantiate(lineGenPrefab);
+
+        DisplayCompleteLevel(false);
+
+        // Start with level completed.
+        levelComplete = true;
     }
 
     /**
@@ -199,6 +207,9 @@ public class GameController : MonoBehaviour
         // Spawn the divider.
         SpawnDivider();
 
+        // Cancel the display for the starting messages and UI.
+        DisplayStartingObjects(false);
+
         // Cancel the display for the UI stuff for the completion of the level.
         DisplayCompleteLevel(false);
 
@@ -212,11 +223,6 @@ public class GameController : MonoBehaviour
         levelComplete = false;
 
         EnemyManager.ResetEnemies(currentLevel);
-
-        if (lineGen == null) {
-            // Create the line generator. There should only be one instance at any point.
-            lineGen = Instantiate(lineGenPrefab);
-        }
     }
 
     /**
@@ -355,15 +361,27 @@ public class GameController : MonoBehaviour
             {
                 AdvanceLevel();
             }
-        } else if (Input.GetMouseButtonUp(0)) {
+        } 
+        
+        if (Input.GetMouseButtonUp(0)) {
             AdvanceLevel();
         }
     }
 
+    private void DisplayStartingObjects(bool display = true)
+    {
+        DisplayUI(startingObjects, display);
+    }
+
     private void DisplayCompleteLevel(bool display = true)
     {
+        DisplayUI(completionObjects, display);
+    }
+
+    private void DisplayUI(GameObject[] uiObjects, bool display = true)
+    {
         levelComplete = display;
-        foreach (GameObject gameObject in completionObjects)
+        foreach (GameObject gameObject in uiObjects)
         {
             gameObject.SetActive(display);
         }

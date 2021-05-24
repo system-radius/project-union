@@ -11,6 +11,8 @@ public class LineGenerator : MonoBehaviour
 
     public GameObject pointPrefab;
 
+    public GameObject crawlPointPrefab;
+
     void Start()
     {
         instance = this;
@@ -50,6 +52,16 @@ public class LineGenerator : MonoBehaviour
     {
         // Call for the instance method to spawn the point game object.
         return instance.CreatePointInstance(vector);
+    }
+
+    public static GameObject CreateLinePoint(Vector3 vector)
+    {
+        return instance.CreatePointInstance(vector, instance.pointPrefab);
+    }
+
+    public static GameObject CreateCrawlPoint(Vector3 vector)
+    {
+        return instance.CreatePointInstance(vector, instance.crawlPointPrefab);
     }
 
     /**
@@ -93,8 +105,8 @@ public class LineGenerator : MonoBehaviour
         }
 
         // Create points to represent the line endings.
-        CreatePoint(pointA).transform.parent = line.transform;
-        CreatePoint(pointB).transform.parent = line.transform;
+        CreateLinePoint(pointA).transform.parent = line.transform;
+        CreateLinePoint(pointB).transform.parent = line.transform;
 
         // Create a collision object for the line renderer.
         GenerateLineCollision(pointA, pointB, line);
@@ -118,9 +130,9 @@ public class LineGenerator : MonoBehaviour
     /**
      * Create a point object to represent the vector.
      */
-    private GameObject CreatePointInstance(Vector3 vector)
+    private GameObject CreatePointInstance(Vector3 vector, GameObject prefab = null)
     {
-        GameObject point = pointPrefab == null ? new GameObject("Point") : Instantiate(pointPrefab);
+        GameObject point = prefab == null ? new GameObject("Point") : Instantiate(prefab);
         point.transform.position = vector;
 
         // Set the parent for this point.
