@@ -126,18 +126,66 @@ public class GridController
      */
     private void ResetField()
     {
-        for (int x = 0; x <= DividerUtils.SIZE_X; x++)
-        {
-            for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
-            {
-                field[x, y] = GridValue.SPACE;
+        TextAsset text = (TextAsset)Resources.Load("Level01", typeof(TextAsset));
+        //TextAsset text = null;
 
-                if (x == 0 || y == 0 || x == DividerUtils.SIZE_X || y == DividerUtils.SIZE_Y)
+        if (text != null)
+        {
+            string content = text.text;
+
+            // Remove the new line.
+            content = content.Replace("\n", "");
+            content = content.Replace("\r", "");
+
+            Debug.Log(content.Length + " == " + ((DividerUtils.SIZE_X + 1) * (DividerUtils.SIZE_Y + 1)));
+
+            for (int i = 0; i < content.Length; i++)
+            {
+                int row = i / (DividerUtils.SIZE_X + 1);
+                int col = i % (DividerUtils.SIZE_X + 1);
+
+                if (col > DividerUtils.SIZE_X + 1)
                 {
-                    field[x, y] = GridValue.BOUNDS;
+                    break;
+                }
+
+                switch (content[i])
+                {
+                    case '0':
+                        field[col, row] = GridValue.BOUNDS;
+                        break;
+                    case '1':
+                        field[col, row] = GridValue.VOID;
+                        break;
+                    case '2':
+                        field[col, row] = GridValue.SPACE;
+                        break;
+                }
+            }
+
+        }
+        else
+        {
+
+            // Use this default behavior if no text file was loaded.
+            for (int x = 0; x <= DividerUtils.SIZE_X; x++)
+            {
+                for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
+                {
+                    field[x, y] = GridValue.SPACE;
+
+                    if (x == 0 || y == 0 || x == DividerUtils.SIZE_X || y == DividerUtils.SIZE_Y)
+                    {
+                        field[x, y] = GridValue.BOUNDS;
+                    }
+
+                    // For override, useful when testing.
+                    //field[x, y] = GridValue.SPACE;
                 }
             }
         }
+
+        DividerUtils.PrintField(field);
 
         // Set the value of the fillable spaces to a negative value.
         // This will force for a recomputation of the fillable spaces.

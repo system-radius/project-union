@@ -37,7 +37,9 @@ public class Mover : MonoBehaviour
     {
 
         ContactPoint2D contact = collision.contacts[0];
+
         rigidBody.velocity = Vector3.Reflect(pastVelocity, contact.normal);
+        //Debug.Log("Entry velocity: " + pastVelocity + ", reflected velocity: " + rigidBody.velocity);
 
         /*
         if (name.Equals("ColliderLeft"))

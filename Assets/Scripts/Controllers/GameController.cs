@@ -361,9 +361,7 @@ public class GameController : MonoBehaviour
             {
                 AdvanceLevel();
             }
-        } 
-        
-        if (Input.GetMouseButtonUp(0)) {
+        } else if (Input.GetMouseButtonUp(0)) {
             AdvanceLevel();
         }
     }

@@ -78,8 +78,10 @@ public class LineGenerator : MonoBehaviour
         // Set the position of the line as the middle coordinate between the two points.
         col.transform.position = (pointA + pointB) / 2;
 
+        float angle = DividerUtils.ComputeAngle(pointA, pointB);
+
         // Set the rotation of the collision as the angle between the two points.
-        col.transform.Rotate(0, 0, DividerUtils.ComputeAngle(pointA, pointB));
+        col.transform.Rotate(0, 0, angle);
         col.gameObject.layer = 30;
         col.gameObject.tag = "ColliderLimit";
     }

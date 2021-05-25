@@ -44,6 +44,12 @@ public class DividerUtils : MonoBehaviour
             angle *= -1;
         }
 
+        if (float.IsNaN(angle))
+        {
+            // Automatically return 0 if the angle is not a number.
+            return 0;
+        }
+
         return Mathf.Rad2Deg * Mathf.Atan(angle);
     }
 
@@ -57,7 +63,7 @@ public class DividerUtils : MonoBehaviour
         {
             for (int x = 0; x <= SIZE_X; x++)
             {
-                s += field[x, y] + " ";
+                s += ((int)field[x, y]) + " ";
             }
             s += "\n";
         }
