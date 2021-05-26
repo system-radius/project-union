@@ -57,7 +57,12 @@ public class LevelManager : MonoBehaviour
         }
         /**/
 
-        TextAsset text = (TextAsset)Resources.Load("Level01", typeof(TextAsset));
+        TextAsset text = (TextAsset)Resources.Load("" + instance.level, typeof(TextAsset));
+
+        if (text == null)
+        {
+            text = (TextAsset)Resources.Load("Default", typeof(TextAsset));
+        }
         //TextAsset text = null;
 
         if (text != null)
