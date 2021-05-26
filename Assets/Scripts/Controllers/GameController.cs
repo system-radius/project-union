@@ -54,9 +54,6 @@ public class GameController : MonoBehaviour
 
     //--- Non-static attributes ---
 
-    // The array that contains all of the levels to be displayed.
-    public GameObject[] levelPrefabs;
-
     // The array of enemy prefabrications to be spawned.
     public GameObject[] enemyPrefabs;
 
@@ -68,6 +65,9 @@ public class GameController : MonoBehaviour
 
     // The prefab for the line generator object.
     public GameObject lineGenPrefab;
+
+    // The prefab for the level manager.
+    public GameObject levelManagerPrefab;
 
     // A created instance at runtime. This represents the player in the game.
     private GameObject divider;
@@ -140,6 +140,9 @@ public class GameController : MonoBehaviour
         // Create the line generator. There should only be one instance at any point.
         Instantiate(lineGenPrefab);
 
+        // Create the level manager.
+        Instantiate(levelManagerPrefab);
+
         DisplayCompleteLevel(false);
 
         // Start with level completed.
@@ -189,7 +192,7 @@ public class GameController : MonoBehaviour
      */
     public void AdvanceLevel() {
 
-        currentLevel = currentLevel + 1 >= levelPrefabs.Length ? 0 : currentLevel + 1;
+        LevelManager.AdvanceLevel();
         Reset();
     }
 
@@ -200,9 +203,6 @@ public class GameController : MonoBehaviour
 
         // Create/reset the masks instances.
         CreateMasks();
-
-        // Create the level image.
-        CreateLevelImage();
 
         // Spawn the divider.
         SpawnDivider();
@@ -222,20 +222,7 @@ public class GameController : MonoBehaviour
         // Reset the completion status.
         levelComplete = false;
 
-        EnemyManager.ResetEnemies(currentLevel);
-    }
-
-    /**
-     * Create the level image.
-     */
-    private void CreateLevelImage()
-    {
-        if (levelImage != null)
-        {
-            Destroy(levelImage);
-        }
-
-        levelImage = Instantiate(levelPrefabs[currentLevel]);
+        EnemyManager.ResetEnemies(LevelManager.GetLevel());
     }
 
     /**

@@ -11,6 +11,8 @@ public class LineGenerator : MonoBehaviour
 
     public GameObject pointPrefab;
 
+    public GameObject spacePrefab;
+
     public GameObject crawlPointPrefab;
 
     void Start()
@@ -52,6 +54,11 @@ public class LineGenerator : MonoBehaviour
     {
         // Call for the instance method to spawn the point game object.
         return instance.CreatePointInstance(vector);
+    }
+
+    public static GameObject CreateSpacePoint(Vector3 vector)
+    {
+        return instance.CreatePointInstance(vector, instance.spacePrefab);
     }
 
     public static GameObject CreateLinePoint(Vector3 vector)

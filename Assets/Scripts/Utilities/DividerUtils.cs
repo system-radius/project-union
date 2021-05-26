@@ -56,12 +56,12 @@ public class DividerUtils : MonoBehaviour
     /**
      * A utility method for printing the integer grid.
      */
-    public static void PrintField(GridValue[,] field)
+    public static void PrintField(GridValue[,] field, int maxX = SIZE_X, int maxY = SIZE_Y)
     {
         string s = "\n";
-        for (int y = SIZE_Y; y >= 0; y--)
+        for (int y = maxY; y >= 0; y--)
         {
-            for (int x = 0; x <= SIZE_X; x++)
+            for (int x = 0; x <= maxX; x++)
             {
                 s += ((int)field[x, y]) + " ";
             }

@@ -47,5 +47,7 @@ MonoBehaviour:
     type: 3}
   pointPrefab: {fileID: 477988202292206138, guid: 12c16694228508f479ab802c0aa1b2ba,
     type: 3}
+  spacePrefab: {fileID: 1285774221664079228, guid: 5498a0a73656a784c8d9d755ab2df372,
+    type: 3}
   crawlPointPrefab: {fileID: 1610482939992462811, guid: 2c585b9472219ea49979dcf337d9dd75,
     type: 3}

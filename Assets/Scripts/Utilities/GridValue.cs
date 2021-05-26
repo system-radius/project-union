@@ -1,9 +1,9 @@
 ﻿
 public enum GridValue
 {
-    BOUNDS = -2,
-    VOID = -1,
-    SPACE = 0,
-    FILLED = 1,
-    CRAWL = 2,
+    BOUNDS = 0,
+    VOID = 1,
+    SPACE = 2,
+    FILLED = 3,
+    CRAWL = 4,
 }

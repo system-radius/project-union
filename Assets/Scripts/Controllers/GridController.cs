@@ -126,43 +126,9 @@ public class GridController
      */
     private void ResetField()
     {
-        TextAsset text = (TextAsset)Resources.Load("Level01", typeof(TextAsset));
-        //TextAsset text = null;
-
-        if (text != null)
+        if (LevelManager.GetInstance() != null)
         {
-            string content = text.text;
-
-            // Remove the new line.
-            content = content.Replace("\n", "");
-            content = content.Replace("\r", "");
-
-            Debug.Log(content.Length + " == " + ((DividerUtils.SIZE_X + 1) * (DividerUtils.SIZE_Y + 1)));
-
-            for (int i = 0; i < content.Length; i++)
-            {
-                int row = i / (DividerUtils.SIZE_X + 1);
-                int col = i % (DividerUtils.SIZE_X + 1);
-
-                if (col > DividerUtils.SIZE_X + 1)
-                {
-                    break;
-                }
-
-                switch (content[i])
-                {
-                    case '0':
-                        field[col, row] = GridValue.BOUNDS;
-                        break;
-                    case '1':
-                        field[col, row] = GridValue.VOID;
-                        break;
-                    case '2':
-                        field[col, row] = GridValue.SPACE;
-                        break;
-                }
-            }
-
+            LevelManager.CreateLevel(field);
         }
         else
         {
