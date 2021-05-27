@@ -195,6 +195,7 @@ public class GameController : MonoBehaviour
      */
     public void AdvanceLevel() {
 
+        LineGenerator.ClearLines();
         LevelManager.AdvanceLevel();
         Reset();
     }
@@ -395,6 +396,6 @@ public class GameController : MonoBehaviour
         fillPercent = 0f;
 
         // On display of the full image, clear the lines as well.
-        LineGenerator.ClearLines();
+        //LineGenerator.ClearLines();
     }
 }

@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         instance = this;
-        level = -1;
+        level = 0;
     }
 
     public GridValue GetTileValue(int x, int y)

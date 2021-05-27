@@ -57,7 +57,7 @@ public class EnemyManager
 
         // Get whichever is lower
         int limit = Mathf.Min(level + 1, prefabs.Length);
-        int spawnLimit = Mathf.Max(1, level);
+        int spawnLimit = Mathf.Max(1, level - 2);
 
         for (int i = 0; i < limit; i++)
         {

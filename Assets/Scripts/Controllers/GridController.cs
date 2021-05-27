@@ -338,6 +338,8 @@ public class GridController
             return DividerUtils.InterweaveLists(sideA, sideB);
         }
 
+        Debug.Log(sideA.Count + " <=> " + sideB.Count);
+
         if (sideA.Count > sideB.Count)
         {
             //ChangeValue(sideB, GridValue.FILLED);
