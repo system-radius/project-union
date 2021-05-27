@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 /**
@@ -72,9 +73,6 @@ public class GameController : MonoBehaviour
     // A created instance at runtime. This represents the player in the game.
     private GameObject divider;
 
-    // The current image for the level.
-    private GameObject levelImage;
-
     // The array of game objects that has the "Start" tag.
     private GameObject[] startingObjects;
 
@@ -83,6 +81,9 @@ public class GameController : MonoBehaviour
 
     // The 2D array of the masking objects.
     private GameObject[,] masks;
+
+    // The current fill percentage, represented in text.
+    private TextMeshProUGUI fillText;
 
     // The list of the coordinates to be filled gradually.
     private List<Vector2> fillCoords;
@@ -99,9 +100,6 @@ public class GameController : MonoBehaviour
 
     // The timer responsible respawning the player.
     private float respawnTimer = 0f;
-
-    // The current level.
-    private int currentLevel = -1;
 
     // Status for whether the transition has begun.
     private bool transitionStart = false;
@@ -133,6 +131,9 @@ public class GameController : MonoBehaviour
 
         // Create the initial container for the masks.
         masks = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils .SIZE_Y + 1];
+
+        // Retrieve the text object to contain the fill percent.
+        fillText = GameObject.FindGameObjectWithTag("FillPercent").GetComponent<TextMeshProUGUI>();
 
         // Retrieve the starting objects.
         startingObjects = GameObject.FindGameObjectsWithTag("Start");
@@ -195,13 +196,15 @@ public class GameController : MonoBehaviour
      */
     public void AdvanceLevel() {
 
-        LineGenerator.ClearLines();
         LevelManager.AdvanceLevel();
         Reset();
     }
 
     public void Reset()
     {
+
+        fillText.SetText("0%");
+
         // Reset the grid controller to its default state.
         GridController.StaticReset();
 
@@ -299,6 +302,8 @@ public class GameController : MonoBehaviour
             ChangeMasking(coord);
         }
 
+        fillText.SetText(((int)(GridController.ComputeFillPercent() * 100)) + "%");
+
         // Once the fill coordinates are exhausted
         if (fillCoords.Count == 0)
         {
@@ -307,6 +312,7 @@ public class GameController : MonoBehaviour
 
             // Compute the fill percentage.
             fillPercent = GridController.ComputeFillPercent();
+            fillText.SetText(((int)(fillPercent * 100)) + "%");
         }
     }
 
@@ -396,6 +402,6 @@ public class GameController : MonoBehaviour
         fillPercent = 0f;
 
         // On display of the full image, clear the lines as well.
-        //LineGenerator.ClearLines();
+        LineGenerator.ClearLines();
     }
 }

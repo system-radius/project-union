@@ -17,6 +17,7 @@ TagManager:
   - PointA
   - PointB
   - Start
+  - FillPercent
   layers:
   - Default
   - TransparentFX
