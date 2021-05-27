@@ -122,6 +122,9 @@ public class GameController : MonoBehaviour
         // Create an instnace for the grid controller.
         GridController.CreateInstance();
 
+        // Create an instance for the path finder.
+        PathUtils.CreateInstance();
+
         // Create an instance for the enemy manager.
         EnemyManager.CreateInstance(enemyPrefabs);
 

@@ -221,6 +221,18 @@ public class GridController
         }
     }
 
+    private LinePoints GetPathPoints(Vector2 pointA, Vector2 pointB, Vector2 update1, Vector2 update2)
+    {
+
+        Vector2 aUpdate = DividerUtils.ComputeUpdateVector(pointA, pointB, update1);
+        Vector2 newA = DividerUtils.FindStartPos(field, pointA, pointB, aUpdate);
+
+        Vector2 bUpdate = DividerUtils.ComputeUpdateVector(pointB, pointA, update2);
+        Vector2 newB = DividerUtils.FindStartPos(field, pointB, pointA, bUpdate);
+
+        return new LinePoints(newA, newB);
+    }
+
     /**
      * Execution point for changing the values on the grid.
      * This will return the list of coordinates to be filled gradually.
@@ -266,11 +278,21 @@ public class GridController
             field[x, (int)pointA.y] = GridValue.CRAWL;
         }
 
-        List<Vector2> down = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, -1));
-        List<Vector2> up = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, 1));
+        Vector2 downUpdate = new Vector2(1, -1);
+        Vector2 upUpdate = new Vector2(1, 1);
+
+        // Retrieve the starting and ending points for the path finding.
+        LinePoints pathPoints = GetPathPoints(pointA, pointB, downUpdate, upUpdate);
+        if (PathUtils.FindShortestPath(field, pathPoints.GetPointA(), pathPoints.GetPointB()).Count > 0)
+        {
+            // If a path is found, return right away.
+            return result;
+        }
+
+        List<Vector2> down = DividerUtils.ProcessField(field, pointA, pointB, downUpdate);
+        List<Vector2> up = DividerUtils.ProcessField(field, pointA, pointB, upUpdate);
 
         result.AddRange(ProcessFill(down, up));
-
 
         return result;
     }
@@ -284,8 +306,19 @@ public class GridController
             field[(int)pointA.x, y] = GridValue.CRAWL;
         }
 
-        List<Vector2> left = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(-1, 1));
-        List<Vector2> right = DividerUtils.ProcessField(field, pointA, pointB, new Vector2(1, 1));
+        Vector2 leftUpdate = new Vector2(-1, 1);
+        Vector2 rightUpdate = new Vector2(1, 1);
+
+        // Retrieve the starting and ending points for the path finding.
+        LinePoints pathPoints = GetPathPoints(pointA, pointB, leftUpdate, rightUpdate);
+        if (PathUtils.FindShortestPath(field, pathPoints.GetPointA(), pathPoints.GetPointB()).Count > 0)
+        {
+            // If a path is found, return right away.
+            return result;
+        }
+
+        List<Vector2> left = DividerUtils.ProcessField(field, pointA, pointB, leftUpdate);
+        List<Vector2> right = DividerUtils.ProcessField(field, pointA, pointB, rightUpdate);
 
         result.AddRange(ProcessFill(left, right));
 

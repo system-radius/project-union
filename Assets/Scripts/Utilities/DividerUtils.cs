@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -184,7 +185,7 @@ public class DividerUtils : MonoBehaviour
         return visited;
     }
 
-    private static Vector2 ComputeUpdateVector(Vector2 pointA, Vector2 pointB, Vector2 update)
+    public static Vector2 ComputeUpdateVector(Vector2 pointA, Vector2 pointB, Vector2 update)
     {
         Vector2 result = new Vector2();
 
@@ -199,7 +200,7 @@ public class DividerUtils : MonoBehaviour
     /**
      * Find the starting position along the line.
      */
-    private static Vector2 FindStartPos(GridValue[,] field, Vector2 pointA, Vector2 pointB, Vector2 update)
+    public static Vector2 FindStartPos(GridValue[,] field, Vector2 pointA, Vector2 pointB, Vector2 update)
     {
         // Set the current point as the starting point.
         Vector2 result = new Vector2(pointA.x, pointA.y);
@@ -260,7 +261,7 @@ public class DividerUtils : MonoBehaviour
     /**
      * Retrieve the next set of coordinates neighboring the current.
      */
-    private static List<Vector2> FindNextFrontier(GridValue[,] field, Vector2 coord)
+    public static List<Vector2> FindNextFrontier(GridValue[,] field, Vector2 coord)
     {
         List<Vector2> frontier = new List<Vector2>();
 
@@ -288,11 +289,12 @@ public class DividerUtils : MonoBehaviour
                 }
 
                 //if ((x == y) || (x + y == 0))
+                /*
                 if (x == 0 && y == 0)
                 {
                     // Also continue if the x and y coords are on the diagonal.
                     continue;
-                }
+                }/**/
 
                 if (field[gridX, gridY] == GridValue.SPACE)
                 {
