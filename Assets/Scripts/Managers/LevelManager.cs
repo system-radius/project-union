@@ -110,7 +110,7 @@ public class LevelManager : MonoBehaviour
      */
     public static int AdvanceLevel()
     {
-        instance.level = instance.level + 1 > instance.levelImages.Length ? 0 : instance.level + 1;
+        instance.level = instance.level + 1 >= instance.levelImages.Length ? 1 : instance.level + 1;
 
         if (instance.levelObject != null)
         {
