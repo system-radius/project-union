@@ -70,6 +70,9 @@ public class GameController : MonoBehaviour
     // The prefab for the level manager.
     public GameObject levelManagerPrefab;
 
+    // The prefab for the mask manager.
+    public GameObject maskManagerPrefab;
+
     // A created instance at runtime. This represents the player in the game.
     private GameObject divider;
 
@@ -147,6 +150,10 @@ public class GameController : MonoBehaviour
         // Create the level manager.
         Instantiate(levelManagerPrefab);
 
+        // Create the mask manager.
+        Instantiate(maskManagerPrefab);
+
+        // Remove the display for the completion UI.
         DisplayCompleteLevel(false);
 
         // Start with level completed.
@@ -207,6 +214,9 @@ public class GameController : MonoBehaviour
 
         // Reset the grid controller to its default state.
         GridController.StaticReset();
+
+        // Reset the masking for the level.
+        MaskManager.StaticReset();
 
         // Create/reset the masks instances.
         CreateMasks();
@@ -299,6 +309,7 @@ public class GameController : MonoBehaviour
             fillCoords.RemoveAt(0);
 
             GridController.UpdateFieldValue(coord, GridValue.FILLED);
+            MaskManager.ExposeMask((int)coord.x, (int)coord.y);
             ChangeMasking(coord);
         }
 
@@ -397,6 +408,9 @@ public class GameController : MonoBehaviour
                 masks[x, y].SetActive(true);
             }
         }
+
+        // Display the full image.
+        MaskManager.DisplayLevel();
 
         // Reset the fill percentage.
         fillPercent = 0f;

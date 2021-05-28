@@ -1575,6 +1575,8 @@ MonoBehaviour:
     type: 3}
   levelManagerPrefab: {fileID: 7239197868700900045, guid: 0d7a7559a2b6b494c9e8014de4611101,
     type: 3}
+  maskManagerPrefab: {fileID: 4832482329465494914, guid: 7efd273d5df3f9c4cb0a2c58ffd5b5cf,
+    type: 3}
 --- !u!4 &1934345339
 Transform:
   m_ObjectHideFlags: 0
