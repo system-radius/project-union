@@ -18,6 +18,7 @@ TagManager:
   - PointB
   - Start
   - FillPercent
+  - ContinueTap
   layers:
   - Default
   - TransparentFX

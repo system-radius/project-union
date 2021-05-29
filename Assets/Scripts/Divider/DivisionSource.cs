@@ -82,7 +82,8 @@ public class DivisionSource : MonoBehaviour
     {
         // Create a bullet instance that shots out from this source.
         // Make the bullet follow the direction of the current source.
-        targetTransform = Instantiate(bulletPrefab, transform.position, transform.rotation).transform;
+        targetTransform = Instantiate(bulletPrefab, transform.position, transform.rotation, transform)
+            .transform;
 
         // Retrieve the source script from the bullet instance.
         bulletSource = targetTransform.GetComponent<Bullet>();
@@ -95,7 +96,7 @@ public class DivisionSource : MonoBehaviour
     {
         // Create a line connecting this source to the bullet.
         // Cache the trail's line renderer.
-        lineRenderer = Instantiate(trailPrefab, transform.position, transform.rotation).GetComponent<LineRenderer>();
+        lineRenderer = Instantiate(trailPrefab, transform.position, transform.rotation, transform).GetComponent<LineRenderer>();
 
         // Create a capsule collider attached to the line renderer.
         lineCollider = lineRenderer.gameObject.GetComponent<CapsuleCollider2D>();
@@ -139,11 +140,9 @@ public class DivisionSource : MonoBehaviour
         active = false;
         complete = false;
 
-        Destroy(lineRenderer.gameObject);
-
-        if (targetTransform != null)
+        foreach (Transform child in transform)
         {
-            Destroy(targetTransform.gameObject);
+            Destroy(child.gameObject);
         }
     }
 

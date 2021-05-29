@@ -438,6 +438,9 @@ public class GameController : MonoBehaviour
         // Remove the divider.
         Destroy(divider);
 
+        // Destroy all enemies in the field.
+        EnemyManager.DestroyEnemies();
+
         // Display the full image.
         MaskManager.DisplayLevel();
         // Reset the fill percentage.

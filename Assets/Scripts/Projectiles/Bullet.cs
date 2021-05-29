@@ -8,6 +8,9 @@ using UnityEngine;
  */
 public class Bullet : MonoBehaviour
 {
+    // Particles for on connect.
+    public GameObject connect;
+
     // Attribute to control the speed of this object flying forward.
     public float speed = 15f;
 
@@ -44,5 +47,19 @@ public class Bullet : MonoBehaviour
         Debug.Log("Hit a collider limit!");
         rigidBody.velocity = new Vector2(0, 0);
         Destroy(gameObject);
+
+        /*
+        Vector3 angles = transform.rotation.eulerAngles;
+
+        // Remove the rotation on other angles aside from Z-Axis.
+        // Swap the values for the vector.
+        float x = angles.x;
+        angles.x = angles.y;
+        angles.y = angles.z;
+        angles.z = x;
+
+        Transform temp = Instantiate(connect, transform.position, transform.rotation).transform;
+        temp.Rotate(angles);
+        /**/
     }
 }
