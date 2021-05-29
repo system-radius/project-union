@@ -98,6 +98,9 @@ public class GameController : MonoBehaviour
     // The 2D array of the enemy-destroying objects.
     private GameObject[,] enemyCollider;
 
+    // TODO: Special case, remove this after.
+    private TextMeshProUGUI continueTap;
+
     // The current fill percentage, represented in text.
     private TextMeshProUGUI fillText;
 
@@ -157,6 +160,8 @@ public class GameController : MonoBehaviour
         // Retrieve the text object to contain the fill percent.
         fillText = GameObject.FindGameObjectWithTag("FillPercent").GetComponent<TextMeshProUGUI>();
 
+        continueTap = GameObject.FindGameObjectWithTag("ContinueTap").GetComponent<TextMeshProUGUI>();
+
         // Retrieve the starting objects.
         startingObjects = GameObject.FindGameObjectsWithTag("Start");
 
@@ -194,7 +199,7 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        if (divider == null)
+        if (divider == null && !transitionStart)
         {
             // Begin counting towards the respawn of the player.
             respawnTimer += Time.deltaTime;
@@ -419,6 +424,17 @@ public class GameController : MonoBehaviour
     private void DisplayCompleteLevel(bool display = true)
     {
         DisplayUI(completionObjects, display);
+
+        if (display && LevelManager.GetLevel() == 0)
+        {
+            continueTap.SetText("Will you marry me?");
+        }
+        else
+        {
+            continueTap.SetText("Tap to continue!");
+        }
+
+        continueTap.gameObject.SetActive(display);
     }
 
     private void DisplayUI(GameObject[] uiObjects, bool display = true)
