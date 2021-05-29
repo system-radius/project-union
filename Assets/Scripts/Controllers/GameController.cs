@@ -38,19 +38,32 @@ public class GameController : MonoBehaviour
      * A utility function used to change the masking
      * for the specified coordinate.
      */
-    public static void ChangeMasking(Vector2 coord, bool forced = false)
+    public static void ActivateEnemyCollider(Vector2 coord, bool forced = false)
     {
         int x = (int)coord.x;
         int y = (int)coord.y;
 
-        ChangeMasking(x, y, forced);
+        ActivateEnemyCollider(x, y, forced);
     }
 
-    public static void ChangeMasking(int x, int y, bool forced = false)
+    public static void ActivateEnemyCollider(int x, int y, bool forced = false)
     {
         // Change the mask active status, either forcibly
         // or if the corresponding grid value is filled.
-        instance.masks[x, y].SetActive(forced || GridController.GetField()[x, y] == GridValue.FILLED);
+        instance.enemyCollider[x, y].SetActive(forced || GridController.GetField()[x, y] == GridValue.FILLED);
+    }
+
+    public static void DeactivateEnemyCollider(Vector2 coord)
+    {
+        int x = (int)coord.x;
+        int y = (int)coord.y;
+
+        DeactivateEnemyCollider(x, y);
+    }
+
+    public static void DeactivateEnemyCollider(int x, int y)
+    {
+        instance.enemyCollider[x, y].SetActive(false);
     }
 
     //--- Non-static attributes ---
@@ -82,14 +95,17 @@ public class GameController : MonoBehaviour
     // The array of game objects that has the "Finish" tag.
     private GameObject[] completionObjects;
 
-    // The 2D array of the masking objects.
-    private GameObject[,] masks;
+    // The 2D array of the enemy-destroying objects.
+    private GameObject[,] enemyCollider;
 
     // The current fill percentage, represented in text.
     private TextMeshProUGUI fillText;
 
     // The list of the coordinates to be filled gradually.
     private List<Vector2> fillCoords;
+
+    // The list of the coordinates whose collision will be removed.
+    private List<Vector2> toDeactivate;
 
     // The current unmask limit. Will increase gradually,
     // eventually will be enough to cover the whole area to be filled.
@@ -132,8 +148,11 @@ public class GameController : MonoBehaviour
         // Create the list container.
         fillCoords = new List<Vector2>();
 
+        // Create the list for the deactivation of enemy collider.
+        toDeactivate = new List<Vector2>();
+
         // Create the initial container for the masks.
-        masks = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils .SIZE_Y + 1];
+        enemyCollider = new GameObject[DividerUtils.SIZE_X + 1, DividerUtils .SIZE_Y + 1];
 
         // Retrieve the text object to contain the fill percent.
         fillText = GameObject.FindGameObjectWithTag("FillPercent").GetComponent<TextMeshProUGUI>();
@@ -219,7 +238,7 @@ public class GameController : MonoBehaviour
         MaskManager.StaticReset();
 
         // Create/reset the masks instances.
-        CreateMasks();
+        CreateEnemyColliders();
 
         // Spawn the divider.
         SpawnDivider();
@@ -260,7 +279,7 @@ public class GameController : MonoBehaviour
      * Create the contents for the masking array. All of them are set
      * to inactive initially. This method may also be used to reset the masks.
      */
-    private void CreateMasks()
+    private void CreateEnemyColliders()
     {
         for (int x = 0; x <= DividerUtils.SIZE_X; x++)
         {
@@ -268,17 +287,31 @@ public class GameController : MonoBehaviour
             {
                 Vector2 coord = DividerUtils.GridToUnitPoint(x, y);
 
-                if (masks[x, y] == null)
+                if (enemyCollider[x, y] == null)
                 {
                     GameObject mask = Object.Instantiate(maskPrefab, transform);
                     mask.transform.position = new Vector3(coord.x, coord.y);
-                    masks[x, y] = mask;
+                    enemyCollider[x, y] = mask;
                 }
 
                 //masks[x, y].GetComponent<SpriteMask>().enabled = false;
-                masks[x, y].SetActive(false);
+                enemyCollider[x, y].SetActive(false);
             }
         }
+    }
+
+    /**
+     * Process the deactivation of the enemy colliders.
+     */
+    private void ProcessDeactivate()
+    {
+        foreach (Vector2 vector in toDeactivate)
+        {
+            DeactivateEnemyCollider(vector);
+        }
+
+        // Clear the list for deactivation.
+        toDeactivate.Clear();
     }
 
     /**
@@ -310,7 +343,9 @@ public class GameController : MonoBehaviour
 
             GridController.UpdateFieldValue(coord, GridValue.FILLED);
             MaskManager.ExposeMask((int)coord.x, (int)coord.y);
-            ChangeMasking(coord);
+            ActivateEnemyCollider(coord);
+
+            toDeactivate.Add(coord);
         }
 
         fillText.SetText(((int)(GridController.ComputeFillPercent() * 100)) + "%");
@@ -324,6 +359,8 @@ public class GameController : MonoBehaviour
             // Compute the fill percentage.
             fillPercent = GridController.ComputeFillPercent();
             fillText.SetText(((int)(fillPercent * 100)) + "%");
+
+            ProcessDeactivate();
         }
     }
 
@@ -401,17 +438,8 @@ public class GameController : MonoBehaviour
         // Remove the divider.
         Destroy(divider);
 
-        for (int x = 0; x <= DividerUtils.SIZE_X; x++)
-        {
-            for (int y = 0; y <= DividerUtils.SIZE_Y; y++)
-            {
-                masks[x, y].SetActive(true);
-            }
-        }
-
         // Display the full image.
         MaskManager.DisplayLevel();
-
         // Reset the fill percentage.
         fillPercent = 0f;
 
