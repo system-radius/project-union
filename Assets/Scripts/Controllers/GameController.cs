@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
 
     private static float TRANSITION_LIMIT = 2f;
 
-    private static float SPAWN_TIME_LIMIT = 2f;
+    private static float SPAWN_TIME_LIMIT = 0.5f;
 
     /**
      * Allows for the retrieval of the held instance, statically.

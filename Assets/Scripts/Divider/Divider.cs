@@ -9,6 +9,9 @@ using UnityEngine;
  */
 public class Divider : MonoBehaviour
 {
+    // Explosion prefab.
+    public GameObject explosion;
+
     // There will always be two sides to the divider:
     // - one on the top and down (vertical).
     // - one on left and right (horizontal).
@@ -27,11 +30,17 @@ public class Divider : MonoBehaviour
     // A switch for when the line is complete.
     private bool lineComplete = false;
 
+    // The alive/death state of the player object.
+    private bool alive;
+
     /**
      * Initialize the things needed by this Divider.
      */
     void Start()
     {
+        // Set the alive status to true.
+        alive = true;
+
         // Retrieve the animator component.
         animator = GetComponent<Animator>();
 
@@ -63,6 +72,12 @@ public class Divider : MonoBehaviour
      */
     void FixedUpdate()
     {
+        // The player is not allowed to do anything if they are dead.
+        if (!alive)
+        {
+            return;
+        }
+
         ProcessDivide();
     }
 
@@ -154,9 +169,10 @@ public class Divider : MonoBehaviour
      */
     public void Divide()
     {
-        if (dividing)
+        if (dividing || !alive)
         {
             // There is no need to get dividing set up all over again.
+            // Also check if the divider is still alive.
             return;
         }
 
@@ -237,5 +253,14 @@ public class Divider : MonoBehaviour
     public bool IsDividing()
     {
         return dividing;
+    }
+
+    /**
+     * Upon killing the player, automatically stop the divide as well.
+     */
+    public void KillPlayer()
+    {
+        alive = false;
+        StopDivide();
     }
 }

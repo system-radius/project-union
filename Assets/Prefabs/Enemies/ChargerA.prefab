@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2126686332469528732}
   - component: {fileID: 2126686332469529443}
   - component: {fileID: -8181897022217544174}
-  - component: {fileID: 68511302701891730}
+  - component: {fileID: -8378260915169206046}
   m_Layer: 28
   m_Name: ChargerA
   m_TagString: Enemy
@@ -177,7 +177,7 @@ MonoBehaviour:
   intervalSpin: 1
   intervalRest: 3
   reversible: 1
---- !u!114 &68511302701891730
+--- !u!114 &-8378260915169206046
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,3 +189,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 931e63d0fb4bc5644a5c77f65eb57b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosion: {fileID: 4833533452445177738, guid: 0de19e6f9b2cc264c8b7ac16073a226d,
+    type: 3}

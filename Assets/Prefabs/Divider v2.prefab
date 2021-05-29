@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 3801378050473502425}
   - component: {fileID: -7539494890706941315}
   - component: {fileID: 4110639531082601503}
+  - component: {fileID: 7315230672325487509}
   m_Layer: 31
   m_Name: Divider v2
   m_TagString: Player
@@ -303,3 +304,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede07ac80a20a9c40be2a6cc6149c979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explosion: {fileID: 6970136829108267480, guid: 8582202bd846dc1449c7bb7c1bbfbd65,
+    type: 3}
+--- !u!114 &7315230672325487509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7958453587348471938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad9ed7a364b7a44a59c029d7a9baad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 6970136829108267480, guid: 8582202bd846dc1449c7bb7c1bbfbd65,
+    type: 3}
