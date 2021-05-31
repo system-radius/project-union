@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
 
     private void ProcessColliderLimit()
     {
-        Debug.Log("Hit a collider limit!");
+        //Debug.Log("Hit a collider limit!");
         rigidBody.velocity = new Vector2(0, 0);
         Destroy(gameObject);
 

@@ -10,6 +10,8 @@ using UnityEngine;
  */
 public class GameController : MonoBehaviour
 {
+    public bool debugLines = false;
+
     private static GameController instance;
 
     private static float UNMASK_RATE = 1.25f;
@@ -227,6 +229,11 @@ public class GameController : MonoBehaviour
      */
     public void AdvanceLevel() {
 
+        if (debugLines)
+        {
+            LineGenerator.ClearLines();
+        }
+
         LevelManager.AdvanceLevel();
         Reset();
     }
@@ -424,16 +431,6 @@ public class GameController : MonoBehaviour
     private void DisplayCompleteLevel(bool display = true)
     {
         DisplayUI(completionObjects, display);
-
-        if (display && LevelManager.GetLevel() == 0)
-        {
-            continueTap.SetText("Will you marry me?");
-        }
-        else
-        {
-            continueTap.SetText("Tap to continue!");
-        }
-
         continueTap.gameObject.SetActive(display);
     }
 
@@ -462,7 +459,10 @@ public class GameController : MonoBehaviour
         // Reset the fill percentage.
         fillPercent = 0f;
 
-        // On display of the full image, clear the lines as well.
-        LineGenerator.ClearLines();
+        if (!debugLines)
+        {
+            // On display of the full image, clear the lines as well.
+            LineGenerator.ClearLines();
+        }
     }
 }

@@ -74,7 +74,7 @@ public class DividerUtils : MonoBehaviour
 
     public static void PrintContactPoints(List<Vector3> contactPoints)
     {
-        string text = "";
+        string text = "Contact points: ";
 
         foreach (Vector2 contact in contactPoints)
         {

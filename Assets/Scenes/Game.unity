@@ -1564,6 +1564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e913ef04eae5914282af66a89c71848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugLines: 0
   enemyPrefabs:
   - {fileID: 5493285609152237057, guid: 0a6eb9568d3a2f148b26429028c6f900, type: 3}
   - {fileID: 2126686332469529442, guid: 3c7312f8f4010cd459fbd5f46d0fd4ce, type: 3}

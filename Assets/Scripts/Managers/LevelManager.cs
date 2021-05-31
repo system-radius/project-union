@@ -73,8 +73,6 @@ public class LevelManager : MonoBehaviour
             content = content.Replace("\n", "");
             content = content.Replace("\r", "");
 
-            Debug.Log(content.Length + " == " + ((DividerUtils.SIZE_X + 1) * (DividerUtils.SIZE_Y + 1)));
-
             for (int i = 0; i < content.Length; i++)
             {
                 int row = i / (DividerUtils.SIZE_X + 1);
@@ -110,7 +108,7 @@ public class LevelManager : MonoBehaviour
      */
     public static int AdvanceLevel()
     {
-        instance.level = instance.level + 1 >= instance.levelImages.Length ? 0 : instance.level + 1;
+        instance.level = instance.level + 1 >= instance.levelImages.Length ? 1 : instance.level + 1;
 
         if (instance.levelObject != null)
         {

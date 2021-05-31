@@ -24,7 +24,7 @@ public class ShockBullet : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         string tag = collision.tag;
-        Debug.Log(tag);
+        //Debug.Log(tag);
 
         if (tag == (DividerUtils.TAG_LIMIT))
         {

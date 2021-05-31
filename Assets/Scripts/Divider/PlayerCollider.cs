@@ -62,7 +62,7 @@ public class PlayerCollider : MonoBehaviour
             // The player can only be killed while dividing.
             return;
         }
-        Debug.Log("Dead player!");
+        //Debug.Log("Dead player!");
 
         // Create the particles.
         Instantiate(explosion, transform);

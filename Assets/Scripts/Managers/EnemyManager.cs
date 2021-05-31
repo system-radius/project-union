@@ -122,7 +122,7 @@ public class EnemyManager
             count += coords.Contains(DividerUtils.UnitToGridPoint(x, y)) ? 1 : 0;
         }
 
-        Debug.Log("Count on pos: " + count);
+        //Debug.Log("Count on pos: " + count);
 
         return count;
     }

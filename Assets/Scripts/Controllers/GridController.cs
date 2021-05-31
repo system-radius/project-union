@@ -151,7 +151,7 @@ public class GridController
             }
         }
 
-        DividerUtils.PrintField(field);
+        //DividerUtils.PrintField(field);
 
         // Set the value of the fillable spaces to a negative value.
         // This will force for a recomputation of the fillable spaces.
