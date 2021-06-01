@@ -272,10 +272,12 @@ public class GridController
     private List<Vector2> FillHorizontal(Vector2 pointA, Vector2 pointB)
     {
         List<Vector2> result = new List<Vector2>();
+        List<Vector2> lineCoords = new List<Vector2>();
 
         for (int x = (int)pointA.x; x <= (int)pointB.x; x++)
         {
             field[x, (int)pointA.y] = GridValue.CRAWL;
+            lineCoords.Add(new Vector2(x, pointA.y));
         }
 
         Vector2 downUpdate = new Vector2(1, -1);
@@ -292,7 +294,7 @@ public class GridController
         List<Vector2> down = DividerUtils.ProcessField(field, pointA, pointB, downUpdate);
         List<Vector2> up = DividerUtils.ProcessField(field, pointA, pointB, upUpdate);
 
-        result.AddRange(ProcessFill(down, up));
+        result.AddRange(ProcessFill(lineCoords, down, up));
 
         return result;
     }
@@ -300,10 +302,12 @@ public class GridController
     private List<Vector2> FillVertical(Vector2 pointA, Vector2 pointB)
     {
         List<Vector2> result = new List<Vector2>();
+        List<Vector2> lineCoords = new List<Vector2>();
 
         for (int y = (int)pointA.y; y <= (int)pointB.y; y++)
         {
             field[(int)pointA.x, y] = GridValue.CRAWL;
+            lineCoords.Add(new Vector2(pointA.x, y));
         }
 
         Vector2 leftUpdate = new Vector2(-1, 1);
@@ -320,25 +324,24 @@ public class GridController
         List<Vector2> left = DividerUtils.ProcessField(field, pointA, pointB, leftUpdate);
         List<Vector2> right = DividerUtils.ProcessField(field, pointA, pointB, rightUpdate);
 
-        result.AddRange(ProcessFill(left, right));
+        result.AddRange(ProcessFill(lineCoords, left, right));
 
         return result;
     }
 
-    private List<Vector2> ProcessFill(List<Vector2> sideA, List<Vector2> sideB)
+    private List<Vector2> ProcessFill(List<Vector2> lineCoords, List<Vector2> sideA, List<Vector2> sideB)
     {
         List<Vector2> fillList = new List<Vector2>();
 
         int sideAEnemies = EnemyManager.CountOnPosition(sideA);
         int sideBEnemies = EnemyManager.CountOnPosition(sideB);
+        int midEnemies = EnemyManager.CountOnPosition(lineCoords);
 
-        if (sideAEnemies == 0 && sideBEnemies == 0)
+        if (sideAEnemies == 0 && sideBEnemies == 0 && midEnemies == 0)
         {
             // Fill everything if there are no more enemies.
             return DividerUtils.InterweaveLists(sideA, sideB);
         }
-
-        Debug.Log(sideA.Count + " <=> " + sideB.Count);
 
         if (sideA.Count > sideB.Count)
         {
