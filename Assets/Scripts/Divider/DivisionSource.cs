@@ -35,9 +35,6 @@ public class DivisionSource : MonoBehaviour
 
     private Vector3 lastPosition;
 
-    // The source script for the bullet.
-    private Bullet bulletSource;
-
     // The status of this source, whether it is active or not.
     private bool active;
 
@@ -68,7 +65,8 @@ public class DivisionSource : MonoBehaviour
 
         lineRenderer.SetPosition(TARGET, targetTransform.position);
 
-        lineCollider.size = new Vector2(0.5f, (targetTransform.position - transform.position).magnitude);
+        float magnitude = (targetTransform.position - transform.position).magnitude / 2;
+        lineCollider.size = new Vector2(0.25f, magnitude);
         lineCollider.transform.position = transform.position + (targetTransform.position - transform.position) / 2;
 
         // Record the last known position.
@@ -84,9 +82,6 @@ public class DivisionSource : MonoBehaviour
         // Make the bullet follow the direction of the current source.
         targetTransform = Instantiate(bulletPrefab, transform.position, transform.rotation, transform)
             .transform;
-
-        // Retrieve the source script from the bullet instance.
-        bulletSource = targetTransform.GetComponent<Bullet>();
     }
 
     /**
