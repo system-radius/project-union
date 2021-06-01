@@ -123,6 +123,12 @@ public class TouchController : MonoBehaviour
 
     void Rotate()
     {
+        if (divideController.IsDividing())
+        {
+            // Prevent the rotation when a divide is in progress.
+            return;
+        }
+
         horizontal = !horizontal;
 
         float rotation = horizontal ? ROTATION_CONST : -ROTATION_CONST;
