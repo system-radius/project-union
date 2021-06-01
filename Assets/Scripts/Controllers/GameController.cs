@@ -114,7 +114,7 @@ public class GameController : MonoBehaviour
 
     // The current unmask limit. Will increase gradually,
     // eventually will be enough to cover the whole area to be filled.
-    private float unmaskLimit = 16f;
+    private float unmaskLimit = 1;
 
     // The current fill percentage that has been accomplished.
     private float fillPercent = 0f;
@@ -341,11 +341,12 @@ public class GameController : MonoBehaviour
 
         // If the fill coords list has content.
         // Increase the unmask limit every time the loop is hit.
-        //unmaskLimit *= UNMASK_RATE;
+        unmaskLimit = unmaskLimit * UNMASK_RATE > 16f ? 16 : unmaskLimit * UNMASK_RATE;
+
 
         // The unmask limit is not supposed to be greater than the amount of the current
         // coordinates to be filled.
-        unmaskLimit = unmaskLimit > fillCoords.Count ? fillCoords.Count : 16;
+        unmaskLimit = unmaskLimit > fillCoords.Count ? fillCoords.Count : unmaskLimit;
 
         for (int i = 0; i < (int)unmaskLimit; i++)
         {
@@ -366,7 +367,7 @@ public class GameController : MonoBehaviour
         if (fillCoords.Count == 0)
         {
             // Reset the unmask limit.
-            //unmaskLimit = 1f;
+            unmaskLimit = 1f;
 
             // Compute the fill percentage.
             fillPercent = GridController.ComputeFillPercent();
